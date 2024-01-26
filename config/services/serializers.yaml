@@ -1,0 +1,2 @@
+services:
+  Tailr\SuluTranslationsBundle\Domain\Serializer\TranslationSerializer: ~

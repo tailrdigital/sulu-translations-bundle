@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
+    <key>tailr_translations_form</key>
+    <properties>
+        <section name="general">
+            <meta>
+                <title>General</title>
+            </meta>
+            <properties>
+                <property name="key" type="text_area" disabledCondition="true">
+                    <meta>
+                        <title>Key</title>
+                    </meta>
+                </property>
+                <property name="translation" type="text_area" mandatory="true">
+                    <meta>
+                        <title>Translation</title>
+                    </meta>
+                </property>
+                <property name="domain" type="text_line" disabledCondition="true" colspan="6">
+                    <meta>
+                        <title>Created at</title>
+                    </meta>
+                </property>
+                <property name="locale" type="text_line" disabledCondition="true" colspan="6">
+                    <meta>
+                        <title>Updated at</title>
+                    </meta>
+                </property>
+            </properties>
+        </section>
+    </properties>
+</form>

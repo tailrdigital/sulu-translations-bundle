@@ -1,0 +1,26 @@
+services:
+  Tailr\SuluTranslationsBundle\Presentation\Controller\Admin\ListController:
+    arguments:
+      - '@fos_rest.view_handler'
+      - '@sulu_core.doctrine_list_builder_factory'
+      - '@sulu_core.list_builder.field_descriptor_factory'
+      - '@sulu_core.doctrine_rest_helper'
+    tags:
+      - { name: 'controller.service_arguments' }
+      - { name: 'sulu.context', context: 'admin' }
+
+  Tailr\SuluTranslationsBundle\Presentation\Controller\Admin\FetchController:
+    arguments:
+      - '@Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository'
+      - '@Tailr\SuluTranslationsBundle\Domain\Serializer\TranslationSerializer'
+    tags:
+      - { name: 'controller.service_arguments' }
+      - { name: 'sulu.context', context: 'admin' }
+
+  Tailr\SuluTranslationsBundle\Presentation\Controller\Admin\UpdateController:
+    arguments:
+      - '@Tailr\SuluTranslationsBundle\Domain\Command\UpdateHandler'
+      - '@Tailr\SuluTranslationsBundle\Domain\Serializer\TranslationSerializer'
+    tags:
+      - { name: 'controller.service_arguments' }
+      - { name: 'sulu.context', context: 'admin' }

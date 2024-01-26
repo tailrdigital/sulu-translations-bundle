@@ -1,0 +1,5 @@
+services:
+  Tailr\SuluTranslationsBundle\Domain\Command\UpdateHandler:
+    arguments:
+      - '@Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository'
+      - '@tailr_translations.utc_clock'
