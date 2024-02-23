@@ -8,8 +8,6 @@ use Symfony\Component\Clock\ClockInterface;
 use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
 use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
 
-use function Psl\Str\is_empty;
-
 class UpdateHandler
 {
     public function __construct(
@@ -20,10 +18,6 @@ class UpdateHandler
 
     public function __invoke(int $id, string $translationValue): Translation
     {
-        if (is_empty($translationValue)) {
-            throw new \RuntimeException('You need to provide an valid translation value.');
-        }
-
         $translation = $this->repository->findById($id);
         $this->repository->save(
             $translation->patch(

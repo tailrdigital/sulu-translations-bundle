@@ -6,7 +6,6 @@ namespace Tailr\SuluTranslationsBundle\Presentation\Controller\Admin;
 
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
@@ -21,7 +20,7 @@ final class FetchController extends AbstractSecuredTranslationsController implem
     ) {
     }
 
-    public function __invoke(int $id, Request $request): Response
+    public function __invoke(int $id): Response
     {
         return new JsonResponse(
             ($this->serializer)($this->repository->findById($id))

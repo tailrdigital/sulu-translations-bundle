@@ -27,7 +27,7 @@ final class DatabaseProviderFactory extends AbstractProviderFactory
         }
 
         if (self::DATABASE_PROVIDER_NAME !== $dsn->getHost()) {
-            throw new LogicException(sprintf('The DSN should contain %s as hostname.', self::DATABASE_PROVIDER_NAME));
+            throw new LogicException(sprintf('The DSN should contain %s as name.', self::DATABASE_PROVIDER_NAME));
         }
 
         return new DatabaseProvider($this->writer, $this->loader, $this->remover);

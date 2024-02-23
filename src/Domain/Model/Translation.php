@@ -7,6 +7,8 @@ namespace Tailr\SuluTranslationsBundle\Domain\Model;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+use function Psl\invariant;
+
 #[ORM\Entity]
 #[ORM\Table(name: 'tailr_translations')]
 class Translation
@@ -50,8 +52,10 @@ class Translation
         $this->createdAt = $createdAt;
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
+        invariant(null !== $this->id, 'Please save model before selecting the ID.');
+
         return $this->id;
     }
 

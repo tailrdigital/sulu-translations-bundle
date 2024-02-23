@@ -4,20 +4,16 @@ declare(strict_types=1);
 
 namespace Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
 use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
-
-use function Psl\Type\string;
 
 class Writer
 {
     public function __construct(
         private readonly ClockInterface $clock,
         private readonly TranslationRepository $repository,
-        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -43,8 +39,6 @@ class Writer
                         $this->clock->now(),
                     ));
                 }
-
-                $this->entityManager->flush();
             }
         }
     }
