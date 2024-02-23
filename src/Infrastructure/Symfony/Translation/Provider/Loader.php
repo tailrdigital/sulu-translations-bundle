@@ -8,6 +8,9 @@ use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\TranslatorBag;
 use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
 
+use function Psl\Type\string;
+use function Psl\Type\vec;
+
 class Loader
 {
     public function __construct(private readonly TranslationRepository $repository)
@@ -16,6 +19,9 @@ class Loader
 
     public function execute(array $domains, array $locales): TranslatorBag
     {
+        $domains = vec(string())->coerce($domains);
+        $locales = vec(string())->coerce($locales);
+
         $translatorBag = new TranslatorBag();
         foreach ($domains as $domain) {
             foreach ($locales as $locale) {

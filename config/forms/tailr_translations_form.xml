@@ -9,7 +9,7 @@
                 <title>General</title>
             </meta>
             <properties>
-                <property name="key" type="text_area" disabledCondition="true">
+                <property name="key" type="text_area" disabledCondition="id">
                     <meta>
                         <title>Key</title>
                     </meta>
@@ -19,14 +19,14 @@
                         <title>Translation</title>
                     </meta>
                 </property>
-                <property name="domain" type="text_line" disabledCondition="true" colspan="6">
+                <property name="domain" type="text_line" disabledCondition="id" colspan="6">
                     <meta>
-                        <title>Created at</title>
+                        <title>Domain</title>
                     </meta>
                 </property>
-                <property name="locale" type="text_line" disabledCondition="true" colspan="6">
+                <property name="locale" type="text_line" disabledCondition="id" colspan="6">
                     <meta>
-                        <title>Updated at</title>
+                        <title>Locale</title>
                     </meta>
                 </property>
             </properties>

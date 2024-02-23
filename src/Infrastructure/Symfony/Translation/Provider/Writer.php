@@ -10,6 +10,8 @@ use Symfony\Component\Translation\TranslatorBagInterface;
 use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
 use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
 
+use function Psl\Type\string;
+
 class Writer
 {
     public function __construct(
@@ -23,13 +25,16 @@ class Writer
     {
         foreach ($translatorBag->getCatalogues() as $catalogue) {
             $locale = $catalogue->getLocale();
+            /**
+             * @var string $domain
+             * @var array<string, string> $messagesMap
+             */
             foreach ($catalogue->all() as $domain => $messagesMap) {
                 foreach ($messagesMap as $translationKey => $translationMessage) {
                     $translation = $this->repository->findByKeyLocaleDomain($translationKey, $locale, $domain);
                     if (null !== $translation) {
                         continue;
                     }
-
                     $this->repository->save(new Translation(
                         $locale,
                         $domain,

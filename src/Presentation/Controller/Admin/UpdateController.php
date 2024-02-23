@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Tailr\SuluTranslationsBundle\Domain\Command\UpdateHandler;
 use Tailr\SuluTranslationsBundle\Domain\Serializer\TranslationSerializer;
 
+use function Psl\Type\non_empty_string;
+
 #[Route(path: '/translations/{id}', name: 'tailr.translations_update', methods: ['PUT'])]
 final class UpdateController extends AbstractSecuredTranslationsController implements SecuredControllerInterface
 {
@@ -26,7 +28,7 @@ final class UpdateController extends AbstractSecuredTranslationsController imple
             ($this->serializer)(
                 ($this->handler)(
                     $id,
-                    $request->get('translation'),
+                    non_empty_string()->coerce($request->request->get('translation')),
                 ),
             )
         );

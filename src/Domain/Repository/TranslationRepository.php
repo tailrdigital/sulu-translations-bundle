@@ -8,7 +8,7 @@ use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
 
 interface TranslationRepository
 {
-    public function findById(int $id): ?Translation;
+    public function findById(int $id): Translation;
 
     /**
      * @return Translation[]
@@ -19,7 +19,7 @@ interface TranslationRepository
 
     public function save(Translation $translation): void;
 
-    public function removeByKeyLocaleDomain(string $key, string $local, string $domain): void;
+    public function removeByKeyLocaleDomain(string $key, string $locale, string $domain): void;
 
     public function removeById(int $id): void;
 }

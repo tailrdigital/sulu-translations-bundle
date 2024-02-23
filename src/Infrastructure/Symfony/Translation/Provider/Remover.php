@@ -17,6 +17,10 @@ class Remover
     {
         foreach ($translatorBag->getCatalogues() as $catalogue) {
             $locale = $catalogue->getLocale();
+            /**
+             * @var string $domain
+             * @var array<string, string> $messagesMap
+             */
             foreach ($catalogue->all() as $domain => $messagesMap) {
                 foreach (array_keys($messagesMap) as $key) {
                     $this->repository->removeByKeyLocaleDomain(

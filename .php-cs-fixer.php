@@ -67,6 +67,7 @@ return (new PhpCsFixer\Config())
         'phpdoc_to_return_type' => false,
         'phpdoc_to_comment' => false,
         'phpdoc_types_order' => false,
+        'phpdoc_align' => ['align' => 'left'],
         'pow_to_exponentiation' => true,
         'psr_autoloading' => true,
         'random_api_migration' => false,

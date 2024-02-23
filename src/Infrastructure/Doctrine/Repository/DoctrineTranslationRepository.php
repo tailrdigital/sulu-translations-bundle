@@ -6,6 +6,7 @@ namespace Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Tailr\SuluTranslationsBundle\Domain\Exception\TranslationNotFoundException;
 use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
 use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
 
@@ -15,9 +16,14 @@ class DoctrineTranslationRepository implements TranslationRepository
     {
     }
 
-    public function findById(int $id): ?Translation
+    public function findById(int $id): Translation
     {
-        return $this->repository()->find($id);
+        $translation = $this->repository()->find($id);
+        if (null === $translation) {
+            throw TranslationNotFoundException::withId($id);
+        }
+
+        return $translation;
     }
 
     public function findAllByLocaleDomain(string $locale, string $domain): array
@@ -28,14 +34,17 @@ class DoctrineTranslationRepository implements TranslationRepository
             ->setParameter('domain', $domain)
             ->setParameter('locale', $locale);
 
-        return $qb->getQuery()->getResult();
+        /** @var Translation[] $result */
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
     }
 
     public function findByKeyLocaleDomain(string $key, string $locale, string $domain): ?Translation
     {
         $qb = $this->repository()->createQueryBuilder('translation');
-
-        return $qb->where('translation.key = :key')
+        /** @var Translation|null $translation */
+        $translation = $qb->where('translation.key = :key')
             ->andWhere('translation.domain = :domain')
             ->andWhere('translation.locale = :locale')
             ->setParameter('key', $key)
@@ -43,6 +52,8 @@ class DoctrineTranslationRepository implements TranslationRepository
             ->setParameter('locale', $locale)
             ->getQuery()
             ->getOneOrNullResult();
+
+        return $translation;
     }
 
     public function removeByKeyLocaleDomain(string $key, string $locale, string $domain): void
@@ -67,11 +78,7 @@ class DoctrineTranslationRepository implements TranslationRepository
 
     public function removeById(int $id): void
     {
-        if (!$translation = $this->findById($id)) {
-            return;
-        }
-
-        $this->entityManager->remove($translation);
+        $this->entityManager->remove($this->findById($id));
         $this->entityManager->flush();
     }
 

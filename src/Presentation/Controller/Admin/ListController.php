@@ -14,7 +14,6 @@ use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
 use Tailr\SuluTranslationsBundle\Infrastructure\Sulu\Admin\TranslationsAdmin;
 
@@ -32,10 +31,10 @@ final class ListController extends AbstractSecuredTranslationsController impleme
     public function __invoke(Request $request): Response
     {
         $listBuilder = $this->listBuilderFactory->create(Translation::class);
-
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(TranslationsAdmin::LIST_KEY);
         $this->restHelper->initializeListBuilder(
             $listBuilder,
-            $this->fieldDescriptorFactory->getFieldDescriptors(TranslationsAdmin::LIST_KEY) ?: []
+            null !== $fieldDescriptors ? $fieldDescriptors : []
         );
 
         /** @psalm-suppress RedundantCastGivenDocblockType */
