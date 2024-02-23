@@ -21,11 +21,18 @@
             <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
             <filter type="text" />
         </property>
-        <property name="translation" searchability="yes" visibility="always" translation="Translation">
-            <field-name>translation</field-name>
-            <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
-            <filter type="text" />
-        </property>
+        <concatenation-property name="translation" searchability="yes" visibility="always" translation="Translation" glue=";">
+            <field>
+                <field-name>id</field-name>
+                <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
+            </field>
+            <field>
+                <field-name>translation</field-name>
+                <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
+            </field>
+            <transformer type="tailr_translation.inline_edit"/>
+            <filter type="text"/>
+        </concatenation-property>
         <property name="createdAt" visibility="yes" translation="Created at">
             <field-name>createdAt</field-name>
             <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
