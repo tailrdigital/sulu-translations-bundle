@@ -29,8 +29,11 @@ class Writer
                 foreach ($messagesMap as $translationKey => $translationMessage) {
                     $translation = $this->repository->findByKeyLocaleDomain($translationKey, $locale, $domain);
                     if (null !== $translation) {
+                        $translation->patch($translationMessage, $this->clock->now());
+                        $this->repository->save($translation);
                         continue;
                     }
+
                     $this->repository->save(new Translation(
                         $locale,
                         $domain,

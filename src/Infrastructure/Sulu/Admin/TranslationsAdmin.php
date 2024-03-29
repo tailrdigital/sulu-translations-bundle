@@ -48,18 +48,10 @@ class TranslationsAdmin extends Admin
         }
 
         $listToolbarActions = $editFormToolbarActions = [];
-        //        if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::ADD)) {
-        //            $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
-        //        }
-
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $editFormToolbarActions[] = new ToolbarAction('sulu_admin.save');
+            $listToolbarActions[] = new ToolbarAction('tailr_translation.export_translations');
         }
-
-        //        if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-        //            $listToolbarActions[] = new ToolbarAction('sulu_admin.delete');
-        //            $editFormToolbarActions[] = new ToolbarAction('sulu_admin.delete');
-        //        }
 
         // Configure List View
         $listView = $this->viewBuilderFactory->createListViewBuilder(self::LIST_VIEW, '/translations')
@@ -67,6 +59,7 @@ class TranslationsAdmin extends Admin
             ->setListKey(self::LIST_KEY)
             ->setTitle('Translations')
             ->addListAdapters(['table'])
+            ->disableSelection()
             ->setEditView(self::EDIT_FORM_VIEW)
             ->addToolbarActions($listToolbarActions);
         $viewCollection->add($listView);

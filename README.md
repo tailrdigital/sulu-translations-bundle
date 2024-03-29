@@ -21,4 +21,5 @@ bin/console translation:push database (--delete-missing)
 
 # Pulling database translations to the CSVs again:
 bin/console translation:pull database --force --format csv
+bin/console translation:pull database --format csv
 ```

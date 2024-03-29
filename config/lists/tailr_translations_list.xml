@@ -11,7 +11,7 @@
             <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
             <filter type="text" />
         </property>
-        <property name="domain" searchability="yes" visibility="always" translation="Domain">
+        <property name="domain" searchability="yes" visibility="no" translation="Domain">
             <field-name>domain</field-name>
             <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
             <filter type="text" />

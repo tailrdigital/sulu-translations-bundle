@@ -1,5 +1,6 @@
 import {Requester} from "sulu-admin-bundle/services";
 import {runActionOnServer} from "../utilities/run-action-on-server";
+import symfonyRouting from "fos-jsrouting/router";
 
 /**
  * @param {number} id
@@ -11,7 +12,7 @@ export async function updateTranslationValue(
     translation,
 ) {
     await runActionOnServer(
-        Requester.put(`/admin/api/translations/${id}`, {
+        Requester.put(symfonyRouting.generate('tailr.translations_update', {id}), {
             translation: translation
         })
     );

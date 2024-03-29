@@ -24,3 +24,10 @@ services:
     tags:
       - { name: 'controller.service_arguments' }
       - { name: 'sulu.context', context: 'admin' }
+
+  Tailr\SuluTranslationsBundle\Presentation\Controller\Admin\ExportController:
+    arguments:
+      - '@Tailr\SuluTranslationsBundle\Domain\Command\ExportHandlerInterface'
+    tags:
+      - { name: 'controller.service_arguments' }
+      - { name: 'sulu.context', context: 'admin' }

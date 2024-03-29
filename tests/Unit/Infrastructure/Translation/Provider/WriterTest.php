@@ -50,6 +50,7 @@ class WriterTest extends TestCase
                     && $key === $translation->getKey()
                     && $locale === $translation->getLocale()
                     && $domain === $translation->getDomain()
+                    && 'Foo' === $translation->getTranslation()
             )
         )->shouldBeCalledOnce();
 
@@ -57,14 +58,19 @@ class WriterTest extends TestCase
     }
 
     /** @test */
-    public function it_will_skip_existing_translations(): void
+    public function it_will_update_existing_translations(): void
     {
         $translationBag = TranslationBags::simple();
         $this->repository
             ->findByKeyLocaleDomain('app.foo', 'en', 'messages')
-            ->willReturn(Translations::create());
-        $this->repository->save(Argument::any())
-            ->shouldNotBeCalled();
+            ->willReturn($existingTranslations = Translations::create());
+        $this->repository->save(
+            Argument::that(
+                fn (Translation $translation) => $existingTranslations === $translation
+                    && $this->now->format('Y-m-d') === $translation->getUpdatedAt()->format('Y-m-d')
+                    && 'Foo' === $translation->getTranslation()
+            )
+        )->shouldBeCalledOnce();
 
         $this->writer->execute($translationBag);
     }

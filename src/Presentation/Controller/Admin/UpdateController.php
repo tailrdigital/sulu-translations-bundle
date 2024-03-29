@@ -13,7 +13,7 @@ use Tailr\SuluTranslationsBundle\Domain\Serializer\TranslationSerializer;
 
 use function Psl\Type\non_empty_string;
 
-#[Route(path: '/translations/{id}', name: 'tailr.translations_update', methods: ['PUT'])]
+#[Route(path: '/translations/{id}', name: 'tailr.translations_update', options: ['expose' => true], methods: ['PUT'])]
 final class UpdateController extends AbstractSecuredTranslationsController implements SecuredControllerInterface
 {
     public function __construct(

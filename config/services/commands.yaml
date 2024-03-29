@@ -3,3 +3,8 @@ services:
     arguments:
       - '@Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository'
       - '@tailr_translations.utc_clock'
+
+  Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Export\CliExportHandler:
+    arguments:
+      - '%kernel.project_dir%'
+  Tailr\SuluTranslationsBundle\Domain\Command\ExportHandlerInterface: '@Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Export\CliExportHandler'
