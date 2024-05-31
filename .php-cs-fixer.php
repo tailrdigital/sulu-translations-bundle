@@ -40,6 +40,7 @@ return (new PhpCsFixer\Config())
         'native_function_invocation' => false,
         'no_alias_functions' => true,
         'blank_lines_before_namespace' => ['max_line_breaks' => 2, 'min_line_breaks' => 2],
+        'nullable_type_declaration' => true,
         'no_extra_blank_lines' => true,
         'no_null_property_initialization' => true,
         'no_php4_constructor' => true,
