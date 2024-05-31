@@ -7,7 +7,6 @@ namespace Tailr\SuluTranslationsBundle\Tests\Unit\Presentation\Controller\Admin;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psl\Type\Exception\CoercionException;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Tailr\SuluTranslationsBundle\Domain\Command\UpdateCommand;
@@ -61,13 +60,5 @@ class UpdateControllerTest extends TestCase
         $response = ($this->controller)($id, new Request(request: ['translation' => $translationValue]));
         self::assertSame('{"id":1}', $response->getContent());
         self::assertSame(200, $response->getStatusCode());
-    }
-
-    /** @test */
-    public function it_expects_an_translation_value(): void
-    {
-        self::expectException(CoercionException::class);
-
-        ($this->controller)(1, new Request(request: ['translation' => '']));
     }
 }

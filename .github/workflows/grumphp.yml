@@ -52,6 +52,3 @@ jobs:
           git config --global protocol.file.allow always
       - name: Run the tests
         run: php vendor/bin/grumphp run --no-interaction
-      - name: Stop containers
-        if: always()
-        run: docker compose -f "docker-compose.yml" down
