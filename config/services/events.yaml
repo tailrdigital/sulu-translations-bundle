@@ -1,0 +1,6 @@
+services:
+  Tailr\SuluTranslationsBundle\Infrastructure\Psr\PsrEventDispatcher:
+    arguments:
+      - '@Psr\EventDispatcher\EventDispatcherInterface'
+  Tailr\SuluTranslationsBundle\Domain\Events\EventDispatcher: '@Tailr\SuluTranslationsBundle\Infrastructure\Psr\PsrEventDispatcher'
+

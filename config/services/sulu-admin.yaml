@@ -1,9 +1,4 @@
 services:
-  tailr_translations.utc_clock:
-    class: Symfony\Component\Clock\NativeClock
-    arguments:
-      - 'utc'
-
   Tailr\SuluTranslationsBundle\Infrastructure\Sulu\Admin\TranslationsAdmin:
     arguments:
       - '@sulu_admin.view_builder_factory'

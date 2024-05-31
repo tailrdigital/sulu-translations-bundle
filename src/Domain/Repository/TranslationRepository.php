@@ -19,7 +19,7 @@ interface TranslationRepository
 
     public function save(Translation $translation): void;
 
-    public function removeByKeyLocaleDomain(string $key, string $locale, string $domain): void;
+    public function deleteByKeyLocaleDomain(string $key, string $locale, string $domain): void;
 
-    public function removeById(int $id): void;
+    public function deleteById(int $id): void;
 }

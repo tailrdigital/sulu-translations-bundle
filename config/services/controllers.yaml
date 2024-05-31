@@ -11,7 +11,7 @@ services:
 
   Tailr\SuluTranslationsBundle\Presentation\Controller\Admin\FetchController:
     arguments:
-      - '@Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository'
+      - '@Tailr\SuluTranslationsBundle\Domain\Query\FetchTranslation'
       - '@Tailr\SuluTranslationsBundle\Domain\Serializer\TranslationSerializer'
     tags:
       - { name: 'controller.service_arguments' }
@@ -20,6 +20,7 @@ services:
   Tailr\SuluTranslationsBundle\Presentation\Controller\Admin\UpdateController:
     arguments:
       - '@Tailr\SuluTranslationsBundle\Domain\Command\UpdateHandler'
+      - '@Tailr\SuluTranslationsBundle\Domain\Query\FetchTranslation'
       - '@Tailr\SuluTranslationsBundle\Domain\Serializer\TranslationSerializer'
     tags:
       - { name: 'controller.service_arguments' }
@@ -27,7 +28,7 @@ services:
 
   Tailr\SuluTranslationsBundle\Presentation\Controller\Admin\ExportController:
     arguments:
-      - '@Tailr\SuluTranslationsBundle\Domain\Command\ExportHandlerInterface'
+      - '@Tailr\SuluTranslationsBundle\Domain\Command\ExportHandler'
     tags:
       - { name: 'controller.service_arguments' }
       - { name: 'sulu.context', context: 'admin' }

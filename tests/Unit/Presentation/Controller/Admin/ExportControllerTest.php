@@ -9,19 +9,20 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Tailr\SuluTranslationsBundle\Domain\Command\ExportHandlerInterface;
+use Tailr\SuluTranslationsBundle\Domain\Command\ExportCommand;
+use Tailr\SuluTranslationsBundle\Domain\Command\ExportHandler;
 use Tailr\SuluTranslationsBundle\Presentation\Controller\Admin\ExportController;
 
 class ExportControllerTest extends TestCase
 {
     use ProphecyTrait;
 
-    private ExportHandlerInterface|ObjectProphecy $handler;
+    private ExportHandler|ObjectProphecy $handler;
     private ExportController $controller;
 
     protected function setUp(): void
     {
-        $this->handler = $this->prophesize(ExportHandlerInterface::class);
+        $this->handler = $this->prophesize(ExportHandler::class);
         $this->controller = new ExportController(
             $this->handler->reveal(),
         );
@@ -39,7 +40,7 @@ class ExportControllerTest extends TestCase
     public function it_can_export_translations(): void
     {
         $this->handler
-            ->__invoke()
+            ->__invoke(new ExportCommand())
             ->willReturn('OK')
             ->shouldBeCalled();
 

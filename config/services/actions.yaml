@@ -1,0 +1,5 @@
+services:
+  Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Export\CliExportAction:
+    arguments:
+      - '%kernel.project_dir%'
+  Tailr\SuluTranslationsBundle\Domain\Action\ExportAction: '@Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Export\CliExportAction'

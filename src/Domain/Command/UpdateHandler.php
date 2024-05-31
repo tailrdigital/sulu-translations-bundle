@@ -4,28 +4,30 @@ declare(strict_types=1);
 
 namespace Tailr\SuluTranslationsBundle\Domain\Command;
 
-use Symfony\Component\Clock\ClockInterface;
-use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
+use Tailr\SuluTranslationsBundle\Domain\Events\EventDispatcher;
+use Tailr\SuluTranslationsBundle\Domain\Events\Translation\TranslationUpdatedEvent;
 use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
+use Tailr\SuluTranslationsBundle\Domain\Time\Clock;
 
 class UpdateHandler
 {
     public function __construct(
+        private readonly Clock $clock,
         private readonly TranslationRepository $repository,
-        private readonly ClockInterface $clock,
+        private readonly EventDispatcher $eventDispatcher,
     ) {
     }
 
-    public function __invoke(int $id, string $translationValue): Translation
+    public function __invoke(UpdateCommand $command): void
     {
-        $translation = $this->repository->findById($id);
+        $translation = $this->repository->findById($command->id);
         $this->repository->save(
             $translation->patch(
-                $translationValue,
+                $command->translationMessage,
                 $this->clock->now()
             )
         );
 
-        return $translation;
+        $this->eventDispatcher->dispatch(new TranslationUpdatedEvent($translation));
     }
 }

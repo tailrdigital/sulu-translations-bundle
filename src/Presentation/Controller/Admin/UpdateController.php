@@ -8,7 +8,9 @@ use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Tailr\SuluTranslationsBundle\Domain\Command\UpdateCommand;
 use Tailr\SuluTranslationsBundle\Domain\Command\UpdateHandler;
+use Tailr\SuluTranslationsBundle\Domain\Query\FetchTranslation;
 use Tailr\SuluTranslationsBundle\Domain\Serializer\TranslationSerializer;
 
 use function Psl\Type\non_empty_string;
@@ -18,18 +20,20 @@ final class UpdateController extends AbstractSecuredTranslationsController imple
 {
     public function __construct(
         private readonly UpdateHandler $handler,
+        private readonly FetchTranslation $fetchTranslation,
         private readonly TranslationSerializer $serializer,
     ) {
     }
 
     public function __invoke(int $id, Request $request): JsonResponse
     {
+        ($this->handler)(
+            new UpdateCommand($id, non_empty_string()->coerce($request->request->get('translation')))
+        );
+
         return new JsonResponse(
             ($this->serializer)(
-                ($this->handler)(
-                    $id,
-                    non_empty_string()->coerce($request->request->get('translation')),
-                ),
+                ($this->fetchTranslation)($id)
             )
         );
     }

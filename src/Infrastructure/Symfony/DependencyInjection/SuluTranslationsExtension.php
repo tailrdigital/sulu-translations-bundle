@@ -62,11 +62,16 @@ class SuluTranslationsExtension extends Extension implements PrependExtensionInt
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../../../config/services'));
+        $loader->load('actions.yaml');
         $loader->load('commands.yaml');
+        $loader->load('controllers.yaml');
+        $loader->load('events.yaml');
+        $loader->load('query.yaml');
         $loader->load('controllers.yaml');
         $loader->load('repositories.yaml');
         $loader->load('serializers.yaml');
-        $loader->load('services.yaml');
+        $loader->load('sulu-admin.yaml');
+        $loader->load('time.yaml');
         $loader->load('translation-provider.yaml');
     }
 }
