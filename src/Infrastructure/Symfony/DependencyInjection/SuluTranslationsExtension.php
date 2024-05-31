@@ -57,6 +57,19 @@ class SuluTranslationsExtension extends Extension implements PrependExtensionInt
                 ]
             );
         }
+
+        if ($container->hasExtension('framework')) {
+            $container->prependExtensionConfig(
+                'framework',
+                [
+                    'translator' => [
+                        'paths' => [
+                            __DIR__.'/../../../../translations',
+                        ],
+                    ],
+                ]
+            );
+        }
     }
 
     public function load(array $configs, ContainerBuilder $container): void

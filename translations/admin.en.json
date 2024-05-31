@@ -1,0 +1,6 @@
+{
+  "tailr_translations.export_button_label": "Export translations",
+  "tailr_translations.export_confirmation_message": "Are you sure you want to export all the translations????",
+  "tailr_translations.export_general_error_message": "Something went wrong during export. Please check the server logs.",
+  "tailr_translations.update_general_error_message": "Something went wrong during update. Please check the server logs."
+}

@@ -13,7 +13,7 @@ use Tailr\SuluTranslationsBundle\Domain\Command\UpdateHandler;
 use Tailr\SuluTranslationsBundle\Domain\Query\FetchTranslation;
 use Tailr\SuluTranslationsBundle\Domain\Serializer\TranslationSerializer;
 
-use function Psl\Type\non_empty_string;
+use function Psl\Type\string;
 
 #[Route(path: '/translations/{id}', name: 'tailr.translations_update', options: ['expose' => true], methods: ['PUT'])]
 final class UpdateController extends AbstractSecuredTranslationsController implements SecuredControllerInterface
@@ -28,7 +28,7 @@ final class UpdateController extends AbstractSecuredTranslationsController imple
     public function __invoke(int $id, Request $request): JsonResponse
     {
         ($this->handler)(
-            new UpdateCommand($id, non_empty_string()->coerce($request->request->get('translation')))
+            new UpdateCommand($id, string()->coerce($request->request->get('translation')))
         );
 
         return new JsonResponse(

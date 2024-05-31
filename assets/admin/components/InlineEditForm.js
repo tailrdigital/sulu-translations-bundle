@@ -10,14 +10,14 @@ function InlineEditForm({translationId, value}) {
 
     const onError = () => {
         snackbarStore.add(
-            {type: 'error', text: translate(`Something went wrong during update translation. Please check the server logs.`)},
+            {type: 'error', text: translate('tailr_translations.update_general_error_message')},
             8000
         );
         setEditingValue(value);
     }
 
     const onBlur = (event) => {
-        if ('' === event.target.value.trim() || value === event.target.value) {
+        if (value === event.target.value) {
             setEditingValue(value);
             return;
         }
@@ -30,6 +30,7 @@ function InlineEditForm({translationId, value}) {
     return (
         <>
             <textarea
+                key={`tailr_translations.inline_edit_form_${translationId}`}
                 rows={2}
                 cols={45}
                 disabled={saving}
