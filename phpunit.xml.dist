@@ -25,6 +25,7 @@
         </include>
         <exclude>
             <file>src/SuluTranslationsBundle.php</file>
+            <directory suffix=".php">src/Infrastructure/Doctrine</directory>
             <directory suffix=".php">src/Infrastructure/Sulu/Admin</directory>
             <directory suffix=".php">src/Infrastructure/Symfony/DependencyInjection</directory>
         </exclude>
