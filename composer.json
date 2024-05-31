@@ -21,6 +21,7 @@
         "jackalope/jackalope-doctrine-dbal": "^1.7",
         "ramsey/uuid": "^4.7",
         "sulu/sulu": "^2.5",
+        "symfony/clock": "^6.4",
         "symfony/config": "^6.0",
         "symfony/console": "^6.0",
         "symfony/dependency-injection": "^6.0",
