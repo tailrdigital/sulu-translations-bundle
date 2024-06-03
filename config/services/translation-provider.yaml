@@ -9,7 +9,7 @@ services:
 
   Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider\Remover:
     arguments:
-      - '@Tailr\SuluTranslationsBundle\Domain\Command\RemoveHandler'
+      - '@Tailr\SuluTranslationsBundle\Domain\Command\DeleteHandler'
 
   Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider\DatabaseProviderFactory:
     arguments:

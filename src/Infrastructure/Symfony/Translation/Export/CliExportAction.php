@@ -11,13 +11,20 @@ use Tailr\SuluTranslationsBundle\Domain\Exception\ExportFailedException;
 
 class CliExportAction implements ExportAction
 {
-    public function __construct(private readonly string $projectDir)
-    {
+    /**
+     * @param string $projectDir
+     * @param string $exportFormat
+     */
+    public function __construct(
+        private readonly string $projectDir,
+        private readonly string $exportFormat,
+    ) {
     }
 
     public function __invoke(): string
     {
         try {
+
             $process = new Process([
                 'php',
                 'bin/console',
@@ -25,7 +32,7 @@ class CliExportAction implements ExportAction
                 'translation:pull',
                 'database',
                 '--format',
-                'csv',
+                $this->exportFormat,
                 '--force',
             ], timeout: 180);
             $process->setWorkingDirectory($this->projectDir);

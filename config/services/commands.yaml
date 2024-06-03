@@ -5,7 +5,7 @@ services:
       - '@Tailr\SuluTranslationsBundle\Domain\Action\ExportAction'
       - '@Tailr\SuluTranslationsBundle\Domain\Events\EventDispatcher'
 
-  Tailr\SuluTranslationsBundle\Domain\Command\RemoveHandler:
+  Tailr\SuluTranslationsBundle\Domain\Command\DeleteHandler:
     arguments:
       - '@Tailr\SuluTranslationsBundle\Domain\Time\Clock'
       - '@Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository'

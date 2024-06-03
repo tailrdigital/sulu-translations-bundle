@@ -10,6 +10,9 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
+use function Psl\Type\non_empty_string;
+use function Psl\Type\shape;
+
 class SuluTranslationsExtension extends Extension implements PrependExtensionInterface
 {
     public function prepend(ContainerBuilder $container): void
@@ -70,6 +73,7 @@ class SuluTranslationsExtension extends Extension implements PrependExtensionInt
                 ]
             );
         }
+
     }
 
     public function load(array $configs, ContainerBuilder $container): void
@@ -86,5 +90,12 @@ class SuluTranslationsExtension extends Extension implements PrependExtensionInt
         $loader->load('sulu-admin.yaml');
         $loader->load('time.yaml');
         $loader->load('translation-provider.yaml');
+
+        $configuration = new Configuration();
+        $config = shape([
+            'export_format' => non_empty_string(),
+        ])->assert($this->processConfiguration($configuration, $configs));
+
+        $container->setParameter('sulu_translations.export_format', $config['export_format']);
     }
 }
