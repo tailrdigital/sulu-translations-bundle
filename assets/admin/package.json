@@ -27,6 +27,6 @@
     "node": ">=12"
   },
   "scripts": {
-    "lint": "eslint --fix-dry-run ."
+    "lint": "eslint --fix-dry-run --max-warnings=0 ."
   }
 }

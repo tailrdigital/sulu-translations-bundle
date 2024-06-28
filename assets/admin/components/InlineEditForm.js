@@ -3,6 +3,14 @@ import {updateTranslationValue} from "../api/updateTranslationValue";
 import {translate} from "sulu-admin-bundle/utils";
 import snackbarStore from "sulu-admin-bundle/stores/snackbarStore";
 
+/**
+ *
+ * @param {Object} props
+ * @param {Number} props.translationId
+ * @param {String} props.value
+ * @returns {React.Element}
+ * @constructor
+ */
 function InlineEditForm({translationId, value}) {
     const [saving, setSaving] = useState(false);
     const [editingValue, setEditingValue] = useState(value);

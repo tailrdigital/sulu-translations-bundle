@@ -9,7 +9,7 @@ import snackbarStore from "sulu-admin-bundle/stores/snackbarStore";
  * @param {Object} props
  * @param {function} props.onCancel
  * @param {function} props.onSuccess
- * @returns {JSX.Element}
+ * @returns {React.Element}
  * @constructor
  */
 function ExportTranslationsDialog(props) {
