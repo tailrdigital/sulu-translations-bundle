@@ -1,0 +1,2 @@
+services:
+  Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Dbal\SetupTranslationsTable: ~

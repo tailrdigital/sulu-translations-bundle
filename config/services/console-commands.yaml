@@ -1,0 +1,7 @@
+services:
+  Tailr\SuluTranslationsBundle\Presentation\Console\SetupTranslationsTableCommand:
+    arguments:
+      - '@Doctrine\Persistence\ManagerRegistry'
+      - '@Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Dbal\SetupTranslationsTable'
+    tags:
+      - console.command
