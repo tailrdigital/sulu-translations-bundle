@@ -1,10 +1,24 @@
 services:
+  Tailr\SuluTranslationsBundle\Domain\Command\ExportHandler:
+    arguments:
+      - '@Tailr\SuluTranslationsBundle\Domain\Time\Clock'
+      - '@Tailr\SuluTranslationsBundle\Domain\Action\ExportAction'
+      - '@Tailr\SuluTranslationsBundle\Domain\Events\EventDispatcher'
+
+  Tailr\SuluTranslationsBundle\Domain\Command\DeleteHandler:
+    arguments:
+      - '@Tailr\SuluTranslationsBundle\Domain\Time\Clock'
+      - '@Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository'
+      - '@Tailr\SuluTranslationsBundle\Domain\Events\EventDispatcher'
+
   Tailr\SuluTranslationsBundle\Domain\Command\UpdateHandler:
     arguments:
+      - '@Tailr\SuluTranslationsBundle\Domain\Time\Clock'
       - '@Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository'
-      - '@tailr_translations.utc_clock'
+      - '@Tailr\SuluTranslationsBundle\Domain\Events\EventDispatcher'
 
-  Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Export\CliExportHandler:
+  Tailr\SuluTranslationsBundle\Domain\Command\WriteHandler:
     arguments:
-      - '%kernel.project_dir%'
-  Tailr\SuluTranslationsBundle\Domain\Command\ExportHandlerInterface: '@Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Export\CliExportHandler'
+      - '@Tailr\SuluTranslationsBundle\Domain\Time\Clock'
+      - '@Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository'
+      - '@Tailr\SuluTranslationsBundle\Domain\Events\EventDispatcher'

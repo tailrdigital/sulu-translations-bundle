@@ -9,7 +9,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
+use Tailr\SuluTranslationsBundle\Domain\Query\FetchTranslation;
 use Tailr\SuluTranslationsBundle\Domain\Serializer\TranslationSerializer;
 use Tailr\SuluTranslationsBundle\Presentation\Controller\Admin\FetchController;
 use Tailr\SuluTranslationsBundle\Tests\Fixtures\Translations;
@@ -18,16 +18,16 @@ class FetchControllerTest extends TestCase
 {
     use ProphecyTrait;
 
-    private TranslationRepository|ObjectProphecy $repository;
+    private ObjectProphecy|FetchTranslation $fetchTranslation;
     private TranslationSerializer|ObjectProphecy $serializer;
     private FetchController $controller;
 
     protected function setUp(): void
     {
-        $this->repository = $this->prophesize(TranslationRepository::class);
+        $this->fetchTranslation = $this->prophesize(FetchTranslation::class);
         $this->serializer = $this->prophesize(TranslationSerializer::class);
         $this->controller = new FetchController(
-            $this->repository->reveal(),
+            $this->fetchTranslation->reveal(),
             $this->serializer->reveal()
         );
     }
@@ -43,7 +43,7 @@ class FetchControllerTest extends TestCase
     /** @test */
     public function it_can_fetch_translation_record(): void
     {
-        $this->repository->findById($id = 1)
+        $this->fetchTranslation->__invoke($id = 1)
             ->willReturn($translation = Translations::create())
             ->shouldBeCalled();
         $this->serializer->__invoke($translation)

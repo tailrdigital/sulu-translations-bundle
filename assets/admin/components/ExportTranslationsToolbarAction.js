@@ -15,7 +15,7 @@ export default class ExportTranslationsToolbarAction extends AbstractListToolbar
         return {
             type: 'button',
             icon: 'su-upload',
-            label: translate('Export translations'),
+            label: translate('tailr_translations.export_button_label'),
             onClick: this.handleOpen
         };
     }
@@ -30,7 +30,7 @@ export default class ExportTranslationsToolbarAction extends AbstractListToolbar
 
         return <>
             <ExportTranslationsDialog
-                key={'tailr_translation.export_translations'}
+                key={'tailr_translations.export_translations_toolbar_action'}
                 onCancel={this.handleClose}
                 onSuccess={this.handleClose}
             />

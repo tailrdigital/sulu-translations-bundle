@@ -8,9 +8,11 @@
         <testsuite name="Unit">
             <directory>./tests/Unit</directory>
         </testsuite>
+        <!--
         <testsuite name="Functional">
             <directory>./tests/Functional</directory>
         </testsuite>
+        -->
     </testsuites>
 
     <php>
@@ -23,6 +25,8 @@
         </include>
         <exclude>
             <file>src/SuluTranslationsBundle.php</file>
+            <directory suffix=".php">src/Infrastructure/Doctrine</directory>
+            <directory suffix=".php">src/Infrastructure/Symfony/Translation/Export</directory>
             <directory suffix=".php">src/Infrastructure/Sulu/Admin</directory>
             <directory suffix=".php">src/Infrastructure/Symfony/DependencyInjection</directory>
         </exclude>

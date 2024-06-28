@@ -8,7 +8,7 @@ use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
 
 class Translations
 {
-    public static function create(string $key = null, string $value = null, \DateTimeImmutable $createdAt = null): Translation
+    public static function create(?string $key = null, ?string $value = null, ?\DateTimeImmutable $createdAt = null): Translation
     {
         return new Translation(
             'en',

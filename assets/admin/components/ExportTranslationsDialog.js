@@ -9,7 +9,7 @@ import snackbarStore from "sulu-admin-bundle/stores/snackbarStore";
  * @param {Object} props
  * @param {function} props.onCancel
  * @param {function} props.onSuccess
- * @returns {JSX.Element}
+ * @returns {React.Element}
  * @constructor
  */
 function ExportTranslationsDialog(props) {
@@ -33,7 +33,7 @@ function ExportTranslationsDialog(props) {
     const onError = () => {
         setLoading(false);
         snackbarStore.add(
-            {type: 'error', text: translate(`Something went wrong during export. Please check the server logs.`)},
+            {type: 'error', text: translate('tailr_translations.export_general_error_message')},
             8000
         );
         props.onCancel();
@@ -49,8 +49,9 @@ function ExportTranslationsDialog(props) {
     return (
         <>
             <Dialog
-                title={`${translate('Export translations')}`}
+                title={`${translate('tailr_translations.export_button_label')}`}
                 open={true}
+                key={'tailr_translations.export_translations_dialog'}
                 snackbarType="warning"
                 cancelText={translate('Cancel')}
                 confirmText={translate('Ok')}
@@ -58,7 +59,7 @@ function ExportTranslationsDialog(props) {
                 onConfirm={doExport}
                 confirmLoading={loading}
             >
-                {translate('Are you sure you want to export all the translations?')}
+                {translate('tailr_translations.export_confirmation_message')}
             </Dialog>
         </>
     );

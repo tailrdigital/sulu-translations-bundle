@@ -1,0 +1,4 @@
+services:
+  Tailr\SuluTranslationsBundle\Domain\Query\FetchTranslation:
+    arguments:
+      - '@Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository'

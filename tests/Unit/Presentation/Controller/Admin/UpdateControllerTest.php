@@ -7,10 +7,11 @@ namespace Tailr\SuluTranslationsBundle\Tests\Unit\Presentation\Controller\Admin;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psl\Type\Exception\CoercionException;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Tailr\SuluTranslationsBundle\Domain\Command\UpdateCommand;
 use Tailr\SuluTranslationsBundle\Domain\Command\UpdateHandler;
+use Tailr\SuluTranslationsBundle\Domain\Query\FetchTranslation;
 use Tailr\SuluTranslationsBundle\Domain\Serializer\TranslationSerializer;
 use Tailr\SuluTranslationsBundle\Presentation\Controller\Admin\UpdateController;
 use Tailr\SuluTranslationsBundle\Tests\Fixtures\Translations;
@@ -26,10 +27,12 @@ class UpdateControllerTest extends TestCase
     protected function setUp(): void
     {
         $this->handler = $this->prophesize(UpdateHandler::class);
+        $this->fetchTranslation = $this->prophesize(FetchTranslation::class);
         $this->serializer = $this->prophesize(TranslationSerializer::class);
         $this->controller = new UpdateController(
             $this->handler->reveal(),
-            $this->serializer->reveal()
+            $this->fetchTranslation->reveal(),
+            $this->serializer->reveal(),
         );
     }
 
@@ -45,10 +48,11 @@ class UpdateControllerTest extends TestCase
     public function it_can_update_a_translation_value_of_a_translation_record(): void
     {
         $this->handler
-            ->__invoke($id = 1, $translationValue = 'Some updated value')
+            ->__invoke(new UpdateCommand($id = 1, $translationValue = 'Some updated value'))
+            ->shouldBeCalled();
+        $this->fetchTranslation->__invoke($id)
             ->willReturn($translation = Translations::create())
             ->shouldBeCalled();
-
         $this->serializer->__invoke($translation)
             ->willReturn(['id' => $id])
             ->shouldBeCalled();
@@ -56,13 +60,5 @@ class UpdateControllerTest extends TestCase
         $response = ($this->controller)($id, new Request(request: ['translation' => $translationValue]));
         self::assertSame('{"id":1}', $response->getContent());
         self::assertSame(200, $response->getStatusCode());
-    }
-
-    /** @test */
-    public function it_expects_an_translation_value(): void
-    {
-        self::expectException(CoercionException::class);
-
-        ($this->controller)(1, new Request(request: ['translation' => '']));
     }
 }

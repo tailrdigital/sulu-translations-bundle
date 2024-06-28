@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider;
 
-use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
-use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
-use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
+use Tailr\SuluTranslationsBundle\Domain\Command\WriteCommand;
+use Tailr\SuluTranslationsBundle\Domain\Command\WriteHandler;
 
 class Writer
 {
     public function __construct(
-        private readonly ClockInterface $clock,
-        private readonly TranslationRepository $repository,
+        private readonly WriteHandler $handler
     ) {
     }
 
@@ -27,20 +25,7 @@ class Writer
              */
             foreach ($catalogue->all() as $domain => $messagesMap) {
                 foreach ($messagesMap as $translationKey => $translationMessage) {
-                    $translation = $this->repository->findByKeyLocaleDomain($translationKey, $locale, $domain);
-                    if (null !== $translation) {
-                        $translation->patch($translationMessage, $this->clock->now());
-                        $this->repository->save($translation);
-                        continue;
-                    }
-
-                    $this->repository->save(new Translation(
-                        $locale,
-                        $domain,
-                        $translationKey,
-                        $translationMessage,
-                        $this->clock->now(),
-                    ));
+                    ($this->handler)(new WriteCommand($translationKey, $locale, $domain, $translationMessage));
                 }
             }
         }

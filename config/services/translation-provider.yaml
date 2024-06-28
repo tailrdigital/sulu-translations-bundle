@@ -1,9 +1,7 @@
 services:
   Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider\Writer:
     arguments:
-      - '@tailr_translations.utc_clock'
-      - '@Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository'
-      - '@doctrine.orm.default_entity_manager'
+      - '@Tailr\SuluTranslationsBundle\Domain\Command\WriteHandler'
 
   Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider\Loader:
     arguments:
@@ -11,7 +9,7 @@ services:
 
   Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider\Remover:
     arguments:
-      - '@Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository'
+      - '@Tailr\SuluTranslationsBundle\Domain\Command\DeleteHandler'
 
   Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider\DatabaseProviderFactory:
     arguments:

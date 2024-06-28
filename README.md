@@ -74,6 +74,17 @@ framework:
                 locales: [ 'nl', 'en', 'fr' ]
 ```
 
+## Configuration
+
+If you want to export your translations via the administrator panel, you should define the format or extension which is used for your translation files. 
+
+```yaml
+# config/packages/sulu_translations.yaml
+
+sulu_translations:
+  export_format: 'csv'
+```
+
 #### Permissions
 
 Make sure you've set the correct permissions in the Sulu admin for this package. Go to _Settings > User Roles_ and enable the permissions (tailr_translations) you need. Afterwards you could find the translations view/panel via _Settings > Manage translations_.
@@ -92,7 +103,7 @@ Once you have local translation files, you can export them to the database by us
 bin/console translation:push database 
 ```
 
-Afterwards you can update the translations via the Sulu admin panel. 
+Next you can update the translations via the Sulu admin panel. 
 
 Once you are done, you can export the translations back to the files by using the command below or clicking the _Export translations_ button via the Sulu admin panel.
 

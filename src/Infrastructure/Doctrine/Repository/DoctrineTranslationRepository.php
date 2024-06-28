@@ -56,7 +56,7 @@ class DoctrineTranslationRepository implements TranslationRepository
         return $translation;
     }
 
-    public function removeByKeyLocaleDomain(string $key, string $locale, string $domain): void
+    public function deleteByKeyLocaleDomain(string $key, string $locale, string $domain): void
     {
         $this->repository()->createQueryBuilder('translation')
             ->delete()
@@ -76,7 +76,7 @@ class DoctrineTranslationRepository implements TranslationRepository
         $this->entityManager->flush();
     }
 
-    public function removeById(int $id): void
+    public function deleteById(int $id): void
     {
         $this->entityManager->remove($this->findById($id));
         $this->entityManager->flush();

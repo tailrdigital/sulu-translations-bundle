@@ -1,0 +1,7 @@
+services:
+  Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Export\CliExportAction:
+    arguments:
+      - '%kernel.project_dir%'
+      - '%sulu_translations.export_format%'
+
+  Tailr\SuluTranslationsBundle\Domain\Action\ExportAction: '@Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Export\CliExportAction'
