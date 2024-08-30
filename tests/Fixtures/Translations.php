@@ -10,7 +10,7 @@ class Translations
 {
     public static function create(?string $key = null, ?string $value = null, ?\DateTimeImmutable $createdAt = null): Translation
     {
-        return new Translation(
+        return Translation::create(
             'en',
             'messages',
             $key ?: 'app.foo.bar',

@@ -46,7 +46,7 @@ class UpdateHandlerTest extends TestCase
             ->willReturn($translation = Translations::create());
         $this->clock->now()
             ->willReturn($updatedAt = new \DateTimeImmutable());
-        $this->repository->save($translation)
+        $this->repository->update($translation)
             ->shouldBeCalled();
         $this->eventDispatcher
             ->dispatch(Argument::that(fn (TranslationUpdatedEvent $event) => $event->translation === $translation))

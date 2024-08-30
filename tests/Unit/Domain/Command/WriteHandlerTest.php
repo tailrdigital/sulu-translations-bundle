@@ -54,7 +54,7 @@ class WriteHandlerTest extends TestCase
         $this->repository->findByKeyLocaleDomain($key, $locale, $domain)
             ->willReturn(null);
 
-        $this->repository->save(Argument::that(fn (Translation $translation) => $translation->getTranslation() === $translationValue
+        $this->repository->create(Argument::that(fn (Translation $translation) => $translation->getTranslation() === $translationValue
             && $translation->getKey() === $key
             && $translation->getLocale() === $locale
             && $translation->getDomain() === $domain
@@ -87,7 +87,7 @@ class WriteHandlerTest extends TestCase
         $this->repository->findByKeyLocaleDomain($key, $locale, $domain)
             ->willReturn($exitingTranslation = Translations::create());
 
-        $this->repository->save(Argument::that(fn (Translation $translation) => $translation->getTranslation() === $translationValue
+        $this->repository->update(Argument::that(fn (Translation $translation) => $translation->getTranslation() === $translationValue
             && $translation->getCreatedAt() === $exitingTranslation->getCreatedAt()
             && $translation->getUpdatedAt() === $now
         ))->shouldBeCalled();

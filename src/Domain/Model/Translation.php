@@ -4,52 +4,44 @@ declare(strict_types=1);
 
 namespace Tailr\SuluTranslationsBundle\Domain\Model;
 
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-
 use function Psl\invariant;
 
-#[ORM\Entity]
-#[ORM\Table(name: 'tailr_translations')]
 class Translation
 {
     public const RESOURCE_KEY = 'tailr_translations';
+    public const TABLE_NAME = 'tailr_translations';
 
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    private function __construct(
+        private ?int $id,
+        private string $locale,
+        private string $domain,
+        private string $key,
+        private string $translation,
+        private \DateTimeImmutable $createdAt,
+        private ?\DateTimeImmutable $updatedAt
+    ) {
+    }
 
-    #[ORM\Column(type: Types::STRING, length: 2, nullable: false)]
-    private string $locale;
-
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
-    private string $domain;
-
-    #[ORM\Column(type: Types::TEXT, nullable: false)]
-    private string $key;
-
-    #[ORM\Column(type: Types::TEXT, nullable: false)]
-    private string $translation;
-
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
-
-    public function __construct(
+    public static function create(
         string $locale,
         string $domain,
         string $key,
         string $translation,
         \DateTimeImmutable $createdAt
-    ) {
-        $this->locale = $locale;
-        $this->domain = $domain;
-        $this->key = $key;
-        $this->translation = $translation;
-        $this->createdAt = $createdAt;
+    ): self {
+        return new self(null, $locale, $domain, $key, $translation, $createdAt, null);
+    }
+
+    public static function load(
+        int $id,
+        string $locale,
+        string $domain,
+        string $key,
+        string $translation,
+        \DateTimeImmutable $createdAt,
+        ?\DateTimeImmutable $updatedAt
+    ): self {
+        return new self($id, $locale, $domain, $key, $translation, $createdAt, $updatedAt);
     }
 
     public function getId(): int
@@ -87,6 +79,11 @@ class Translation
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function getCombinedIdAndTranslation(): string
+    {
+        return $this->getId().';'.$this->getTranslation();
     }
 
     public function patch(string $translation, \DateTimeImmutable $updatedAt): self

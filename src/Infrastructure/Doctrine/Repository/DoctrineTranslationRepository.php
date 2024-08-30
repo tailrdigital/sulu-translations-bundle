@@ -4,89 +4,193 @@ declare(strict_types=1);
 
 namespace Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Repository;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\DBAL\Connection;
 use Tailr\SuluTranslationsBundle\Domain\Exception\TranslationNotFoundException;
 use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
+use Tailr\SuluTranslationsBundle\Domain\Query\SearchCriteria;
 use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
+use Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\DatabaseConnectionManager;
+use Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Mapper\TranslationMapper;
+use Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Schema\TranslationTable;
+
+use function Psl\Str\lowercase;
+use function Psl\Vec\map;
 
 class DoctrineTranslationRepository implements TranslationRepository
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly DatabaseConnectionManager $manager,
+        private readonly TranslationMapper $mapper,
+    ) {
     }
 
     public function findById(int $id): Translation
     {
-        $translation = $this->repository()->find($id);
-        if (null === $translation) {
+        $connection = $this->getConnection();
+
+        $qb = $connection->createQueryBuilder();
+        $qb->select(TranslationTable::selectColumns())
+            ->from(TranslationTable::NAME)
+            ->where('id = :id')
+            ->setParameter('id', $id);
+
+        $result = $connection->fetchAssociative(
+            $qb->getSQL(),
+            $qb->getParameters(),
+            $qb->getParameterTypes()
+        );
+
+        if (false === $result) {
             throw TranslationNotFoundException::withId($id);
         }
 
-        return $translation;
+        return $this->mapper->fromDb(
+            $result
+        );
     }
 
     public function findAllByLocaleDomain(string $locale, string $domain): array
     {
-        $qb = $this->repository()->createQueryBuilder('translation');
-        $qb->where('translation.domain = :domain')
-            ->andWhere('translation.locale = :locale')
+        $connection = $this->getConnection();
+
+        $qb = $connection->createQueryBuilder();
+        $qb->select(TranslationTable::selectColumns())
+            ->from(TranslationTable::NAME)
+            ->andWhere('domain = :domain')
+            ->andWhere('locale = :locale')
             ->setParameter('domain', $domain)
             ->setParameter('locale', $locale);
 
-        /** @var Translation[] $result */
-        $result = $qb->getQuery()->getResult();
+        $result = $connection->fetchAllAssociative(
+            $qb->getSQL(),
+            $qb->getParameters(),
+            $qb->getParameterTypes()
+        );
 
-        return $result;
+        return map(
+            $result,
+            fn (array $row) => $this->mapper->fromDb($row)
+        );
+    }
+
+    public function findByCriteria(SearchCriteria $criteria): array
+    {
+        $connection = $this->getConnection();
+
+        $qb = $connection->createQueryBuilder();
+        $qb->select(TranslationTable::selectColumns())
+            ->from(TranslationTable::NAME);
+
+        if ($search = $criteria->searchString()) {
+            $qb->andWhere($qb->expr()->like('lower(translation)', ':search'))
+                ->setParameter('search', '%'.lowercase($search).'%');
+        }
+
+        (null !== $criteria->sortColumn() && null !== $criteria->sortDirection())
+            ? $qb->orderBy($criteria->sortColumn(), $criteria->sortDirection())
+            : $qb->orderBy('created_at', 'DESC');
+
+        $qb->setMaxResults($criteria->limit());
+        $qb->setFirstResult($criteria->offset());
+
+        $result = $connection->fetchAllAssociative(
+            $qb->getSQL(),
+            $qb->getParameters(),
+            $qb->getParameterTypes()
+        );
+
+        return map(
+            $result,
+            fn (array $row) => $this->mapper->fromDb($row)
+        );
     }
 
     public function findByKeyLocaleDomain(string $key, string $locale, string $domain): ?Translation
     {
-        $qb = $this->repository()->createQueryBuilder('translation');
-        /** @var Translation|null $translation */
-        $translation = $qb->where('translation.key = :key')
-            ->andWhere('translation.domain = :domain')
-            ->andWhere('translation.locale = :locale')
+        $connection = $this->getConnection();
+
+        $qb = $connection->createQueryBuilder();
+        $qb->select(TranslationTable::selectColumns())
+            ->from(TranslationTable::NAME)
+            ->where('key = :key')
+            ->andWhere('domain = :domain')
+            ->andWhere('locale = :locale')
             ->setParameter('key', $key)
             ->setParameter('domain', $domain)
-            ->setParameter('locale', $locale)
-            ->getQuery()
-            ->getOneOrNullResult();
+            ->setParameter('locale', $locale);
 
-        return $translation;
+        $result = $connection->fetchAssociative(
+            $qb->getSQL(),
+            $qb->getParameters(),
+            $qb->getParameterTypes()
+        );
+
+        return (false === $result) ? null : $this->mapper->fromDb($result);
     }
 
     public function deleteByKeyLocaleDomain(string $key, string $locale, string $domain): void
     {
-        $this->repository()->createQueryBuilder('translation')
-            ->delete()
-            ->where('translation.key = :key')
-            ->andWhere('translation.domain = :domain')
-            ->andWhere('translation.locale = :locale')
-            ->setParameter('key', $key)
-            ->setParameter('domain', $domain)
-            ->setParameter('locale', $locale)
-            ->getQuery()
-            ->execute();
+        $connection = $this->getConnection();
+
+        $connection->transactional(function () use ($connection, $key, $locale, $domain): void {
+            $qb = $connection->createQueryBuilder()
+                ->delete(TranslationTable::NAME)
+                ->where('key = :key')
+                ->andWhere('domain = :domain')
+                ->andWhere('locale = :locale')
+                ->setParameter('key', $key)
+                ->setParameter('domain', $domain)
+                ->setParameter('locale', $locale);
+
+            $qb->executeStatement();
+        });
     }
 
-    public function save(Translation $translation): void
+    public function create(Translation $translation): void
     {
-        $this->entityManager->persist($translation);
-        $this->entityManager->flush();
+        $connection = $this->getConnection();
+
+        $connection->transactional(function () use ($connection, $translation): void {
+            $connection->insert(
+                TranslationTable::NAME,
+                $this->mapper->toDb($translation),
+                TranslationTable::columnTypes()
+            );
+        });
+    }
+
+    public function update(Translation $translation): void
+    {
+        $connection = $this->getConnection();
+
+        $connection->transactional(function () use ($connection, $translation): void {
+            $connection->update(
+                TranslationTable::NAME,
+                $this->mapper->toDb($translation),
+                [
+                    'id' => $translation->getId(),
+                ],
+                TranslationTable::columnTypes()
+            );
+        });
     }
 
     public function deleteById(int $id): void
     {
-        $this->entityManager->remove($this->findById($id));
-        $this->entityManager->flush();
+        $connection = $this->getConnection();
+
+        $connection->transactional(function () use ($connection, $id): void {
+            $connection->delete(
+                TranslationTable::NAME,
+                [
+                    'id' => $id,
+                ],
+            );
+        });
     }
 
-    /**
-     * @return EntityRepository<Translation>
-     */
-    protected function repository(): EntityRepository
+    private function getConnection(): Connection
     {
-        return $this->entityManager->getRepository(Translation::class);
+        return $this->manager->getConnection();
     }
 }

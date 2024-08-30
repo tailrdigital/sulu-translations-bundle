@@ -26,13 +26,13 @@ class WriteHandler
 
         if (null !== $translation) {
             $translation->patch($command->translationMessage, $this->clock->now());
-            $this->repository->save($translation);
+            $this->repository->update($translation);
             $this->eventDispatcher->dispatch(new TranslationUpdatedEvent($translation));
 
             return;
         }
 
-        $this->repository->save($newTranslation = new Translation(
+        $this->repository->create($newTranslation = Translation::create(
             $command->locale,
             $command->domain,
             $command->translationKey,

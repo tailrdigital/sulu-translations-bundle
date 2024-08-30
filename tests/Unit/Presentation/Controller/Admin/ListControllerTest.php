@@ -4,45 +4,38 @@ declare(strict_types=1);
 
 namespace Tailr\SuluTranslationsBundle\Tests\Unit\Presentation\Controller\Admin;
 
-use FOS\RestBundle\View\View;
-use FOS\RestBundle\View\ViewHandlerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
-use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
-use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
-use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
-use Tailr\SuluTranslationsBundle\Infrastructure\Sulu\Admin\TranslationsAdmin;
+use Symfony\Component\Serializer\SerializerInterface;
+use Tailr\SuluTranslationsBundle\Domain\Query\FetchTranslations;
+use Tailr\SuluTranslationsBundle\Domain\Query\SearchCriteria;
 use Tailr\SuluTranslationsBundle\Presentation\Controller\Admin\ListController;
+use Tailr\SuluTranslationsBundle\Tests\Fixtures\Translations;
 
 class ListControllerTest extends TestCase
 {
     use ProphecyTrait;
 
-    private ViewHandlerInterface|ObjectProphecy $viewHandler;
-    private DoctrineListBuilderFactoryInterface|ObjectProphecy $listBuilderFactory;
-    private FieldDescriptorFactoryInterface|ObjectProphecy $fieldDescriptorFactory;
-    private RestHelperInterface|ObjectProphecy $restHelper;
+    private ObjectProphecy|SerializerInterface $serializer;
+    private ObjectProphecy|ListRestHelperInterface $listRestHelper;
+    private FetchTranslations|ObjectProphecy $fetchTranslations;
     private ListController $controller;
 
     protected function setUp(): void
     {
-        $this->viewHandler = $this->prophesize(ViewHandlerInterface::class);
-        $this->listBuilderFactory = $this->prophesize(DoctrineListBuilderFactoryInterface::class);
-        $this->fieldDescriptorFactory = $this->prophesize(FieldDescriptorFactoryInterface::class);
-        $this->restHelper = $this->prophesize(RestHelperInterface::class);
+        $this->serializer = $this->prophesize(SerializerInterface::class);
+        $this->listRestHelper = $this->prophesize(ListRestHelperInterface::class);
+        $this->fetchTranslations = $this->prophesize(FetchTranslations::class);
 
         $this->controller = new ListController(
-            $this->viewHandler->reveal(),
-            $this->listBuilderFactory->reveal(),
-            $this->fieldDescriptorFactory->reveal(),
-            $this->restHelper->reveal(),
+            $this->serializer->reveal(),
+            $this->listRestHelper->reveal(),
+            $this->fetchTranslations->reveal(),
         );
     }
 
@@ -55,26 +48,65 @@ class ListControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_can_fetch_translations_and_return_a_list_response(): void
+    public function it_can_fetch_a_paginated_list(): void
     {
-        $listBuilder = $this->prophesize(ListBuilderInterface::class);
-        $this->listBuilderFactory->create(Translation::class)
-            ->willReturn($listBuilder->reveal());
-        $this->fieldDescriptorFactory->getFieldDescriptors(TranslationsAdmin::LIST_KEY)->willReturn([]);
-        $this->restHelper->initializeListBuilder($listBuilder->reveal(), [])->shouldBeCalled();
-        $listBuilder->execute()
-            ->willReturn($data = [['id' => 1, 'key' => 'app.foo.bar']]);
-        $listBuilder->getCurrentPage()->willReturn(1);
-        $listBuilder->getLimit()->willReturn(10);
-        $listBuilder->count()->willReturn(20);
+        $this->listRestHelper->getSortColumn()->willReturn(null);
+        $this->listRestHelper->getSortOrder()->willReturn(null);
+        $this->listRestHelper->getSearchPattern()->willReturn(null);
+        $this->listRestHelper->getPage()->willReturn(1);
+        $this->listRestHelper->getLimit()->willReturn($limit = 2);
+        $this->listRestHelper->getOffset()->willReturn($offset = 0);
 
-        $expectedResponse = $this->prophesize(Response::class);
-        $this->viewHandler->handle(Argument::that(fn (View $view) => $view->getData()->getData() === $data))
-            ->willReturn($expectedResponse);
+        $this->fetchTranslations->__invoke(new SearchCriteria(
+            '',
+            null,
+            null,
+            $offset,
+            $limit
+        ))->willReturn(
+            [
+                Translations::create('Foo'),
+                Translations::create('Bar'),
+            ]
+        )->shouldBeCalledOnce();
 
-        $response = ($this->controller)(new Request());
+        $this->serializer->serialize(Argument::type('array'), 'json')
+            ->willReturn($serializedData = '{"_embedded": {"tailr_translations": []}, "limit": 10, "total": 2, "page": 1, "pages": 1}');
 
-        $this->assertEquals($expectedResponse->reveal(), $response);
+        $response = ($this->controller)();
 
+        self::assertSame($serializedData, $response->getContent());
+        self::assertSame(200, $response->getStatusCode());
+    }
+
+    /** @test */
+    public function it_can_fetch_a_paginated_filtered_and_sorted_list(): void
+    {
+        $this->listRestHelper->getSortColumn()->willReturn($sortColumn = 'id');
+        $this->listRestHelper->getSortOrder()->willReturn($sortOrder = 'ASC');
+        $this->listRestHelper->getSearchPattern()->willReturn($searchPattern = 'Foo');
+        $this->listRestHelper->getPage()->willReturn(1);
+        $this->listRestHelper->getLimit()->willReturn($limit = 2);
+        $this->listRestHelper->getOffset()->willReturn($offset = 0);
+
+        $this->fetchTranslations->__invoke(new SearchCriteria(
+            $searchPattern,
+            $sortColumn,
+            $sortOrder,
+            $offset,
+            $limit
+        ))->willReturn(
+            [
+                Translations::create('Foo'),
+            ]
+        )->shouldBeCalledOnce();
+
+        $this->serializer->serialize(Argument::type('array'), 'json')
+            ->willReturn($serializedData = '{"_embedded": {"tailr_translations": []}, "limit": 10, "total": 1, "page": 1, "pages": 1}');
+
+        $response = ($this->controller)();
+
+        self::assertSame($serializedData, $response->getContent());
+        self::assertSame(200, $response->getStatusCode());
     }
 }

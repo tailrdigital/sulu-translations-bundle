@@ -11,6 +11,7 @@ use Symfony\Component\Translation\TranslatorBagInterface;
 final class DatabaseProvider implements ProviderInterface
 {
     public function __construct(
+        private readonly string $connectionName,
         private readonly Writer $writer,
         private readonly Loader $loader,
         private readonly Remover $remover,
@@ -19,7 +20,7 @@ final class DatabaseProvider implements ProviderInterface
 
     public function __toString(): string
     {
-        return 'database://'.DatabaseProviderFactory::DATABASE_PROVIDER_NAME;
+        return sprintf('%s://%s', DatabaseProviderFactory::DATABASE_PROVIDER_DSN_SCHEME, $this->connectionName);
     }
 
     public function write(TranslatorBagInterface $translatorBag): void

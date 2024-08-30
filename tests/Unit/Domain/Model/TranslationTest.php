@@ -12,7 +12,7 @@ class TranslationTest extends TestCase
     /** @test */
     public function it_can_create_a_translation(): void
     {
-        $translation = new Translation(
+        $translation = Translation::create(
             $locale = 'en',
             $domain = 'messages',
             $key = 'app.foo.bar',
@@ -31,7 +31,7 @@ class TranslationTest extends TestCase
     /** @test */
     public function it_can_patch_a_translation(): void
     {
-        $translation = new Translation(
+        $translation = Translation::create(
             $locale = 'en',
             $domain = 'messages',
             $key = 'app.foo.bar',

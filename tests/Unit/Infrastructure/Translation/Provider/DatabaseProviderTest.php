@@ -30,6 +30,7 @@ class DatabaseProviderTest extends TestCase
         $this->remover = $this->prophesize(Remover::class);
 
         $this->provider = new DatabaseProvider(
+            'default',
             $this->writer->reveal(),
             $this->loader->reveal(),
             $this->remover->reveal(),
@@ -45,7 +46,7 @@ class DatabaseProviderTest extends TestCase
     /** @test */
     public function it_is_stringable(): void
     {
-        self::assertSame('database://tailr_translations', (string) $this->provider);
+        self::assertSame('database://default', (string) $this->provider);
     }
 
     /** @test */
