@@ -20,18 +20,34 @@ class SetupTranslationsTable
         $dbalConnection = $this->databaseConnectionManager->getConnection();
 
         $schemaManager = $dbalConnection->createSchemaManager();
+        $schemaDiff = $schemaManager->createComparator()
+            ->compareSchemas($schemaManager->introspectSchema(), $this->getSchema($dbalConnection));
         $platform = $dbalConnection->getDatabasePlatform();
 
-        $schemaDiff = $schemaManager
-            ->createComparator()
-            ->compareSchemas(
-                $schemaManager->introspectSchema(),
-                $this->getSchema($dbalConnection)
-            );
+        if ($platform->supportsSchemas()) {
+            foreach ($schemaDiff->getCreatedSchemas() as $schema) {
+                $dbalConnection->executeStatement($platform->getCreateSchemaSQL($schema));
+            }
+        }
 
-        /** @psalm-suppress DeprecatedMethod */
-        foreach ($schemaDiff->toSaveSql($platform) as $sql) {
+        if ($platform->supportsSequences()) {
+            foreach ($schemaDiff->getAlteredSequences() as $sequence) {
+                $dbalConnection->executeStatement($platform->getAlterSequenceSQL($sequence));
+            }
+
+            foreach ($schemaDiff->getCreatedSequences() as $sequence) {
+                $dbalConnection->executeStatement($platform->getCreateSequenceSQL($sequence));
+            }
+        }
+
+        foreach ($platform->getCreateTablesSQL($schemaDiff->getCreatedTables()) as $sql) {
             $dbalConnection->executeStatement($sql);
+        }
+
+        foreach ($schemaDiff->getAlteredTables() as $tableDiff) {
+            foreach ($platform->getAlterTableSQL($tableDiff) as $sql) {
+                $dbalConnection->executeStatement($sql);
+            }
         }
     }
 
