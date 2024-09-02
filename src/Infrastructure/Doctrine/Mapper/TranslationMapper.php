@@ -7,7 +7,6 @@ namespace Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Mapper;
 use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
 
 use function Psl\Type\int;
-use function Psl\Type\mixed;
 use function Psl\Type\nullable;
 use function Psl\Type\shape;
 use function Psl\Type\string;

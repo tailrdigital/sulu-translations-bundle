@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Tailr\SuluTranslationsBundle\Domain\Exception\TranslationNotFoundException;
 use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
+use Tailr\SuluTranslationsBundle\Domain\Model\TranslationCollection;
 use Tailr\SuluTranslationsBundle\Domain\Query\SearchCriteria;
 use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
 use Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\DatabaseConnectionManager;
@@ -49,7 +51,7 @@ class DoctrineTranslationRepository implements TranslationRepository
         );
     }
 
-    public function findAllByLocaleDomain(string $locale, string $domain): array
+    public function findAllByLocaleDomain(string $locale, string $domain): TranslationCollection
     {
         $connection = $this->getConnection();
 
@@ -67,13 +69,53 @@ class DoctrineTranslationRepository implements TranslationRepository
             $qb->getParameterTypes()
         );
 
-        return map(
-            $result,
-            fn (array $row) => $this->mapper->fromDb($row)
+        return new TranslationCollection(
+            ...map(
+                $result,
+                fn (array $row): Translation => $this->mapper->fromDb($row)
+            )
         );
     }
 
-    public function findByCriteria(SearchCriteria $criteria): array
+    public function findByCriteria(SearchCriteria $criteria): TranslationCollection
+    {
+        $connection = $this->getConnection();
+        $qb = $this->buildQuery($criteria);
+
+        (null !== $criteria->sortColumn() && null !== $criteria->sortDirection())
+            ? $qb->orderBy($criteria->sortColumn(), $criteria->sortDirection())
+            : $qb->orderBy('created_at', 'DESC');
+        $qb->setMaxResults($criteria->limit());
+        $qb->setFirstResult($criteria->offset());
+
+        $result = $connection->fetchAllAssociative(
+            $qb->getSQL(),
+            $qb->getParameters(),
+            $qb->getParameterTypes()
+        );
+
+        return new TranslationCollection(
+            ...map(
+                $result,
+                fn (array $row): Translation => $this->mapper->fromDb($row)
+            )
+        );
+    }
+
+    public function countByCriteria(SearchCriteria $criteria): int
+    {
+        $connection = $this->getConnection();
+        $qb = $this->buildQuery($criteria);
+        $qb->select('count(id)');
+
+        return (int) $connection->fetchOne(
+            $qb->getSQL(),
+            $qb->getParameters(),
+            $qb->getParameterTypes()
+        );
+    }
+
+    private function buildQuery(SearchCriteria $criteria): QueryBuilder
     {
         $connection = $this->getConnection();
 
@@ -86,23 +128,7 @@ class DoctrineTranslationRepository implements TranslationRepository
                 ->setParameter('search', '%'.lowercase($search).'%');
         }
 
-        (null !== $criteria->sortColumn() && null !== $criteria->sortDirection())
-            ? $qb->orderBy($criteria->sortColumn(), $criteria->sortDirection())
-            : $qb->orderBy('created_at', 'DESC');
-
-        $qb->setMaxResults($criteria->limit());
-        $qb->setFirstResult($criteria->offset());
-
-        $result = $connection->fetchAllAssociative(
-            $qb->getSQL(),
-            $qb->getParameters(),
-            $qb->getParameterTypes()
-        );
-
-        return map(
-            $result,
-            fn (array $row) => $this->mapper->fromDb($row)
-        );
+        return $qb;
     }
 
     public function findByKeyLocaleDomain(string $key, string $locale, string $domain): ?Translation

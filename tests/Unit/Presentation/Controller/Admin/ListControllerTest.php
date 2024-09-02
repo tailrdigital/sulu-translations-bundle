@@ -12,6 +12,8 @@ use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
+use Tailr\SuluTranslationsBundle\Domain\Model\TranslationCollection;
+use Tailr\SuluTranslationsBundle\Domain\Model\TranslationList;
 use Tailr\SuluTranslationsBundle\Domain\Query\FetchTranslations;
 use Tailr\SuluTranslationsBundle\Domain\Query\SearchCriteria;
 use Tailr\SuluTranslationsBundle\Presentation\Controller\Admin\ListController;
@@ -64,10 +66,13 @@ class ListControllerTest extends TestCase
             $offset,
             $limit
         ))->willReturn(
-            [
-                Translations::create('Foo'),
-                Translations::create('Bar'),
-            ]
+            new TranslationList(
+                new TranslationCollection(
+                    Translations::create('Foo'),
+                    Translations::create('Bar'),
+                ),
+                2
+            )
         )->shouldBeCalledOnce();
 
         $this->serializer->serialize(Argument::type('array'), 'json')
@@ -96,9 +101,12 @@ class ListControllerTest extends TestCase
             $offset,
             $limit
         ))->willReturn(
-            [
-                Translations::create('Foo'),
-            ]
+            new TranslationList(
+                new TranslationCollection(
+                    Translations::create('Foo'),
+                ),
+                1
+            )
         )->shouldBeCalledOnce();
 
         $this->serializer->serialize(Argument::type('array'), 'json')

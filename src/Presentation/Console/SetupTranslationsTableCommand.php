@@ -24,9 +24,11 @@ class SetupTranslationsTableCommand extends Command
     {
         $style = new SymfonyStyle($input, $output);
 
+        $style->writeln('Setting up the translations table...');
+
         $this->setup->execute();
 
-        $style->info('Finished!');
+        $style->info('Finished! The translation table was created or updated.');
 
         return Command::SUCCESS;
     }

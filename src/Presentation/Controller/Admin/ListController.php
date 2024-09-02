@@ -28,7 +28,6 @@ final class ListController extends AbstractSecuredTranslationsController impleme
 
     public function __invoke(): JsonResponse
     {
-
         $limit = int()->coerce($this->listRestHelper->getLimit());
 
         $translationsResult = ($this->fetchTranslations)(
@@ -42,11 +41,11 @@ final class ListController extends AbstractSecuredTranslationsController impleme
         );
 
         $listRepresentation = new PaginatedRepresentation(
-            $translationsResult,
+            $translationsResult->translationCollection(),
             Translation::RESOURCE_KEY,
             (int) $this->listRestHelper->getPage(),
             $limit,
-            100, // TODO replace with actual total count
+            $translationsResult->totalCount(),
         );
 
         return new JsonResponse(

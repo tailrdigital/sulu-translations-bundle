@@ -5,21 +5,18 @@ declare(strict_types=1);
 namespace Tailr\SuluTranslationsBundle\Domain\Repository;
 
 use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
+use Tailr\SuluTranslationsBundle\Domain\Model\TranslationCollection;
 use Tailr\SuluTranslationsBundle\Domain\Query\SearchCriteria;
 
 interface TranslationRepository
 {
     public function findById(int $id): Translation;
 
-    /**
-     * @return Translation[]
-     */
-    public function findByCriteria(SearchCriteria $criteria): array;
+    public function findByCriteria(SearchCriteria $criteria): TranslationCollection;
 
-    /**
-     * @return Translation[]
-     */
-    public function findAllByLocaleDomain(string $locale, string $domain): array;
+    public function countByCriteria(SearchCriteria $criteria): int;
+
+    public function findAllByLocaleDomain(string $locale, string $domain): TranslationCollection;
 
     public function findByKeyLocaleDomain(string $key, string $locale, string $domain): ?Translation;
 

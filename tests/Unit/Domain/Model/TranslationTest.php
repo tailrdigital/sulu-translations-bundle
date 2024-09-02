@@ -29,6 +29,29 @@ class TranslationTest extends TestCase
     }
 
     /** @test */
+    public function it_can_load_a_translation(): void
+    {
+        $translation = Translation::load(
+            $id = 1,
+            $locale = 'en',
+            $domain = 'messages',
+            $key = 'app.foo.bar',
+            $translationValue = 'Foo Bar Value',
+            $createdAt = new \DateTimeImmutable(),
+            $updatedAt = new \DateTimeImmutable(),
+        );
+
+        self::assertSame($id, $translation->getId());
+        self::assertSame($locale, $translation->getLocale());
+        self::assertSame($domain, $translation->getDomain());
+        self::assertSame($key, $translation->getKey());
+        self::assertSame($translationValue, $translation->getTranslation());
+        self::assertSame($id.';'.$translationValue, $translation->getCombinedIdAndTranslation());
+        self::assertSame($createdAt, $translation->getCreatedAt());
+        self::assertSame($updatedAt, $translation->getUpdatedAt());
+    }
+
+    /** @test */
     public function it_can_patch_a_translation(): void
     {
         $translation = Translation::create(

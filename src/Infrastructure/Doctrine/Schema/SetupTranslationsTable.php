@@ -6,6 +6,7 @@ namespace Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Schema;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
 use Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\DatabaseConnectionManager;
 
 class SetupTranslationsTable
@@ -40,7 +41,9 @@ class SetupTranslationsTable
             }
         }
 
-        foreach ($platform->getCreateTablesSQL($schemaDiff->getCreatedTables()) as $sql) {
+        /** @var list<Table> $createdTables */
+        $createdTables = $schemaDiff->getCreatedTables();
+        foreach ($platform->getCreateTablesSQL($createdTables) as $sql) {
             $dbalConnection->executeStatement($sql);
         }
 

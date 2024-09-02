@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tailr\SuluTranslationsBundle\Domain\Query;
 
+use Tailr\SuluTranslationsBundle\Domain\Model\TranslationList;
 use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
 
 class FetchTranslations
@@ -13,8 +14,11 @@ class FetchTranslations
     ) {
     }
 
-    public function __invoke(SearchCriteria $criteria): array
+    public function __invoke(SearchCriteria $criteria): TranslationList
     {
-        return $this->repository->findByCriteria($criteria);
+        return new TranslationList(
+            $this->repository->findByCriteria($criteria),
+            $this->repository->countByCriteria($criteria),
+        );
     }
 }
