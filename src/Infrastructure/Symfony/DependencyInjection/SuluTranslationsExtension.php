@@ -17,24 +17,6 @@ class SuluTranslationsExtension extends Extension implements PrependExtensionInt
 {
     public function prepend(ContainerBuilder $container): void
     {
-        //        if ($container->hasExtension('doctrine')) {
-        //            $container->prependExtensionConfig(
-        //                'doctrine',
-        //                [
-        //                    'orm' => [
-        //                        'mappings' => [
-        //                            'SuluTranslationsBundle' => [
-        //                                'type' => 'attribute',
-        //                                'dir' => __DIR__.'/../../../Domain/Model',
-        //                                'prefix' => 'Tailr\SuluTranslationsBundle\Domain\Model',
-        //                                'alias' => 'SuluTranslationsBundle',
-        //                            ],
-        //                        ],
-        //                    ],
-        //                ]
-        //            );
-        //        }
-
         if ($container->hasExtension('sulu_admin')) {
             $container->prependExtensionConfig(
                 'sulu_admin',

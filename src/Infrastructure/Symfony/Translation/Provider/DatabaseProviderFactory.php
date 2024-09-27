@@ -12,6 +12,7 @@ use Symfony\Component\Translation\Provider\Dsn;
 
 final class DatabaseProviderFactory extends AbstractProviderFactory
 {
+    public const PROVIDER_NAME = 'database';
     public const DATABASE_PROVIDER_DSN_SCHEME = 'database';
 
     public function __construct(
@@ -25,7 +26,7 @@ final class DatabaseProviderFactory extends AbstractProviderFactory
     public function create(Dsn $dsn): DatabaseProvider
     {
         if (self::DATABASE_PROVIDER_DSN_SCHEME !== $dsn->getScheme()) {
-            throw new UnsupportedSchemeException($dsn, 'database', $this->getSupportedSchemes());
+            throw new UnsupportedSchemeException($dsn, self::PROVIDER_NAME, $this->getSupportedSchemes());
         }
 
         $connectionName = $dsn->getHost();

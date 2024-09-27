@@ -9,19 +9,22 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Translation\Provider\Dsn;
 use Symfony\Component\Translation\Provider\TranslationProviderCollection;
 
+use function Psl\Type\instance_of;
+
 class DatabaseConnectionManager
 {
     public function __construct(
-        private readonly TranslationProviderCollection $translationProviderCollection,
+        private readonly TranslationProviderCollection $providerCollection,
         private readonly ManagerRegistry $doctrineManagerRegistry,
     ) {
     }
 
-    /** @psalm-suppress MoreSpecificReturnType, LessSpecificReturnStatement */
     public function getConnection(): Connection
     {
         try {
-            return $this->doctrineManagerRegistry->getConnection($this->getConnectionName());
+            $connection = $this->doctrineManagerRegistry->getConnection($this->getConnectionName());
+
+            return instance_of(Connection::class)->assert($connection);
         } catch (\InvalidArgumentException $e) {
             throw new \RuntimeException('Doctrine connection not found. Please check the DSN configuration of your database translator provider.', previous: $e);
         }
@@ -29,6 +32,6 @@ class DatabaseConnectionManager
 
     private function getConnectionName(): string
     {
-        return (new Dsn((string) $this->translationProviderCollection->get('database')))->getHost();
+        return (new Dsn((string) $this->providerCollection->get('database')))->getHost();
     }
 }

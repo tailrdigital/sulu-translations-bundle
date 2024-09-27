@@ -17,6 +17,7 @@ use Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Schema\TranslationTable
 
 use function Psl\Str\lowercase;
 use function Psl\Vec\map;
+use function Symfony\Component\String\u;
 
 class DoctrineTranslationRepository implements TranslationRepository
 {
@@ -82,9 +83,9 @@ class DoctrineTranslationRepository implements TranslationRepository
         $connection = $this->getConnection();
         $qb = $this->buildQuery($criteria);
 
-        (null !== $criteria->sortColumn() && null !== $criteria->sortDirection())
-            ? $qb->orderBy($criteria->sortColumn(), $criteria->sortDirection())
-            : $qb->orderBy('created_at', 'DESC');
+        if ($criteria->sortColumn() && $criteria->sortDirection()) {
+            $qb->orderBy(u($criteria->sortColumn())->snake(), u($criteria->sortDirection())->snake());
+        }
         $qb->setMaxResults($criteria->limit());
         $qb->setFirstResult($criteria->offset());
 
@@ -124,8 +125,12 @@ class DoctrineTranslationRepository implements TranslationRepository
             ->from(TranslationTable::NAME);
 
         if ($search = $criteria->searchString()) {
-            $qb->andWhere($qb->expr()->like('lower(translation)', ':search'))
-                ->setParameter('search', '%'.lowercase($search).'%');
+            $qb->andWhere(
+                $qb->expr()->or(
+                    $qb->expr()->like('lower(key)', ':search'),
+                    $qb->expr()->like('lower(translation)', ':search')
+                )
+            )->setParameter('search', '%'.lowercase($search).'%');
         }
 
         return $qb;
