@@ -83,8 +83,13 @@ class DoctrineTranslationRepository implements TranslationRepository
         $connection = $this->getConnection();
         $qb = $this->buildQuery($criteria);
 
-        if ($criteria->sortColumn() && $criteria->sortDirection()) {
-            $qb->orderBy(u($criteria->sortColumn())->snake(), u($criteria->sortDirection())->snake());
+        $sortColumn = $criteria->sortColumn();
+        $sortDirection = $criteria->sortDirection();
+        if (null !== $sortColumn && null !== $sortDirection) {
+            $qb->orderBy(
+                u($sortColumn)->snake()->toString(),
+                u($sortDirection)->snake()->toString()
+            );
         }
         $qb->setMaxResults($criteria->limit());
         $qb->setFirstResult($criteria->offset());
