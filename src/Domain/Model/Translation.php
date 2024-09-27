@@ -18,7 +18,7 @@ class Translation
         private string $key,
         private string $translation,
         private \DateTimeImmutable $createdAt,
-        private ?\DateTimeImmutable $updatedAt
+        private ?\DateTimeImmutable $updatedAt,
     ) {
     }
 
@@ -27,7 +27,7 @@ class Translation
         string $domain,
         string $key,
         string $translation,
-        \DateTimeImmutable $createdAt
+        \DateTimeImmutable $createdAt,
     ): self {
         return new self(null, $locale, $domain, $key, $translation, $createdAt, null);
     }
@@ -39,7 +39,7 @@ class Translation
         string $key,
         string $translation,
         \DateTimeImmutable $createdAt,
-        ?\DateTimeImmutable $updatedAt
+        ?\DateTimeImmutable $updatedAt,
     ): self {
         return new self($id, $locale, $domain, $key, $translation, $createdAt, $updatedAt);
     }

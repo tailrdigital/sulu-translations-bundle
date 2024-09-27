@@ -12,7 +12,7 @@ use Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\DatabaseConnectionManag
 class SetupTranslationsTable
 {
     public function __construct(
-        private readonly DatabaseConnectionManager $databaseConnectionManager
+        private readonly DatabaseConnectionManager $databaseConnectionManager,
     ) {
     }
 

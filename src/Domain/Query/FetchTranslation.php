@@ -10,7 +10,7 @@ use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
 class FetchTranslation
 {
     public function __construct(
-        private readonly TranslationRepository $repository
+        private readonly TranslationRepository $repository,
     ) {
     }
 

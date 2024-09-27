@@ -8,7 +8,7 @@ final class TranslationList
 {
     public function __construct(
         private readonly TranslationCollection $translationCollection,
-        private readonly int $totalCount
+        private readonly int $totalCount,
     ) {
     }
 

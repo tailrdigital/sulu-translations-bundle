@@ -11,7 +11,7 @@ use Tailr\SuluTranslationsBundle\Domain\Command\WriteHandler;
 class Writer
 {
     public function __construct(
-        private readonly WriteHandler $handler
+        private readonly WriteHandler $handler,
     ) {
     }
 

@@ -10,7 +10,7 @@ class WriteCommand
         public string $translationKey,
         public string $locale,
         public string $domain,
-        public string $translationMessage
+        public string $translationMessage,
     ) {
     }
 }
