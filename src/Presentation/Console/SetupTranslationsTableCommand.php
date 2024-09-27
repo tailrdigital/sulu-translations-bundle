@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Schema\SetupTranslationsTable;
 
-#[AsCommand(name: 'tailr:translations:setup', description: 'It will update the database schema for the translations table.')]
+#[AsCommand(name: 'tailr:sulu-translations:setup', description: 'It will update the database schema for the translations table.')]
 class SetupTranslationsTableCommand extends Command
 {
     public function __construct(

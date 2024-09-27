@@ -9,6 +9,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Translation\Provider\Dsn;
 use Symfony\Component\Translation\Provider\TranslationProviderCollection;
 
+use Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider\DatabaseProviderFactory;
+
 use function Psl\Type\instance_of;
 
 class DatabaseConnectionManager
@@ -32,6 +34,6 @@ class DatabaseConnectionManager
 
     private function getConnectionName(): string
     {
-        return (new Dsn((string) $this->providerCollection->get('database')))->getHost();
+        return (new Dsn((string) $this->providerCollection->get(DatabaseProviderFactory::PROVIDER_NAME)))->getHost();
     }
 }

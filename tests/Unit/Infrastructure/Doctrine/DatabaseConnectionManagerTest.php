@@ -12,6 +12,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Translation\Provider\ProviderInterface;
 use Symfony\Component\Translation\Provider\TranslationProviderCollection;
 use Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\DatabaseConnectionManager;
+use Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider\DatabaseProviderFactory;
 
 class DatabaseConnectionManagerTest extends TestCase
 {
@@ -26,7 +27,7 @@ class DatabaseConnectionManagerTest extends TestCase
     {
         $this->provider = $this->prophesize(ProviderInterface::class);
         $this->providersCollection = new TranslationProviderCollection(
-            ['database' => $this->provider->reveal()]
+            [DatabaseProviderFactory::PROVIDER_NAME => $this->provider->reveal()]
         );
         $this->doctrineManagerRegistry = $this->prophesize(ManagerRegistry::class);
 

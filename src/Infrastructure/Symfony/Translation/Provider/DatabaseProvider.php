@@ -20,7 +20,7 @@ final class DatabaseProvider implements ProviderInterface
 
     public function __toString(): string
     {
-        return sprintf('%s://%s', DatabaseProviderFactory::DATABASE_PROVIDER_DSN_SCHEME, $this->connectionName);
+        return sprintf('%s://%s', DatabaseProviderFactory::PROVIDER_DSN_SCHEME, $this->connectionName);
     }
 
     public function write(TranslatorBagInterface $translatorBag): void

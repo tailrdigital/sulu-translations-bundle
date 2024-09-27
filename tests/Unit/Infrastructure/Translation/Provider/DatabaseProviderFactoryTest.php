@@ -44,13 +44,13 @@ class DatabaseProviderFactoryTest extends TestCase
     }
 
     /** @test */
-    public function it_cat_create_a_database_provider(): void
+    public function it_can_create_a_database_provider(): void
     {
-        $provider = $this->factory->create(new Dsn('database://tailr_translations'));
-        $this->managerRegistry->getConnection('tailr_translations')->shouldBeCalled();
+        $provider = $this->factory->create(new Dsn('database://default'));
+        $this->managerRegistry->getConnection('default')->shouldBeCalled();
         self::assertInstanceOf(ProviderInterface::class, $provider);
         self::assertInstanceOf(DatabaseProvider::class, $provider);
-        self::assertStringEndsWith('tailr_translations', (string) $provider);
+        self::assertStringEndsWith('default', (string) $provider);
     }
 
     /** @test */

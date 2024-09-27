@@ -12,8 +12,8 @@ use Symfony\Component\Translation\Provider\Dsn;
 
 final class DatabaseProviderFactory extends AbstractProviderFactory
 {
-    public const PROVIDER_NAME = 'database';
-    public const DATABASE_PROVIDER_DSN_SCHEME = 'database';
+    public const PROVIDER_NAME = 'tailr_database';
+    public const PROVIDER_DSN_SCHEME = 'database';
 
     public function __construct(
         private readonly Writer $writer,
@@ -25,7 +25,7 @@ final class DatabaseProviderFactory extends AbstractProviderFactory
 
     public function create(Dsn $dsn): DatabaseProvider
     {
-        if (self::DATABASE_PROVIDER_DSN_SCHEME !== $dsn->getScheme()) {
+        if (self::PROVIDER_DSN_SCHEME !== $dsn->getScheme()) {
             throw new UnsupportedSchemeException($dsn, self::PROVIDER_NAME, $this->getSupportedSchemes());
         }
 
@@ -47,6 +47,6 @@ final class DatabaseProviderFactory extends AbstractProviderFactory
 
     protected function getSupportedSchemes(): array
     {
-        return [self::DATABASE_PROVIDER_DSN_SCHEME];
+        return [self::PROVIDER_DSN_SCHEME];
     }
 }
