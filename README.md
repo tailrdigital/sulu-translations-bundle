@@ -6,7 +6,7 @@ The package includes a custom [Symfony translation provider](https://symfony.com
 
 ## Demo
 
-TODO add screenshot or gif
+https://github.com/user-attachments/assets/65278818-b376-4c6b-816d-9dceab905140
 
 ## Installation
 
