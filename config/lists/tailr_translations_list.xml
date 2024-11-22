@@ -2,48 +2,18 @@
 <list xmlns="http://schemas.sulu.io/list-builder/list">
     <key>tailr_translations_list</key>
     <properties>
-        <property name="id" visibility="always" translation="sulu_admin.id">
-            <field-name>id</field-name>
-            <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
-        </property>
-        <property name="locale" searchability="yes" visibility="always" translation="Locale">
-            <field-name>locale</field-name>
-            <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
-            <filter type="text" />
-        </property>
-        <property name="domain" searchability="yes" visibility="no" translation="Domain">
-            <field-name>domain</field-name>
-            <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
-            <filter type="text" />
-        </property>
-        <property name="key" searchability="yes" visibility="always" translation="Key">
-            <field-name>key</field-name>
-            <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
-            <filter type="text" />
-        </property>
-        <concatenation-property name="translation" searchability="yes" visibility="always" translation="Translation" glue=";">
-            <field>
-                <field-name>id</field-name>
-                <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
-            </field>
-            <field>
-                <field-name>translation</field-name>
-                <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
-            </field>
+        <property name="id" visibility="always" translation="sulu_admin.id"/>
+        <property name="locale" searchability="yes" visibility="always" translation="Locale"/>
+        <property name="domain" searchability="yes" visibility="no" translation="Domain"/>
+        <property name="key" searchability="yes" visibility="always" translation="Key"/>
+        <property name="combinedIdAndTranslation" searchability="yes" visibility="always" translation="Key">
             <transformer type="tailr_translation.inline_edit"/>
-            <filter type="text"/>
-        </concatenation-property>
+        </property>
         <property name="createdAt" visibility="yes" translation="Created at">
-            <field-name>createdAt</field-name>
-            <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
             <transformer type="datetime"/>
-            <filter type="date"/>
         </property>
         <property name="updatedAt" visibility="yes" translation="Updated at">
-            <field-name>updatedAt</field-name>
-            <entity-name>Tailr\SuluTranslationsBundle\Domain\Model\Translation</entity-name>
             <transformer type="datetime"/>
-            <filter type="date"/>
         </property>
     </properties>
 </list>

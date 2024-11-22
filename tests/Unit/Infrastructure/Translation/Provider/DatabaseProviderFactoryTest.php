@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tailr\SuluTranslationsBundle\Tests\Unit\Infrastructure\Translation\Provider;
 
+use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -24,6 +25,7 @@ class DatabaseProviderFactoryTest extends TestCase
     private Writer|ObjectProphecy $writer;
     private Loader|ObjectProphecy $loader;
     private Remover|ObjectProphecy $remover;
+    private ManagerRegistry|ObjectProphecy $managerRegistry;
     private DatabaseProviderFactory $factory;
 
     protected function setUp(): void
@@ -31,20 +33,24 @@ class DatabaseProviderFactoryTest extends TestCase
         $this->writer = $this->prophesize(Writer::class);
         $this->loader = $this->prophesize(Loader::class);
         $this->remover = $this->prophesize(Remover::class);
+        $this->managerRegistry = $this->prophesize(ManagerRegistry::class);
 
         $this->factory = new DatabaseProviderFactory(
             $this->writer->reveal(),
             $this->loader->reveal(),
             $this->remover->reveal(),
+            $this->managerRegistry->reveal(),
         );
     }
 
     /** @test */
-    public function it_cat_create_a_database_provider(): void
+    public function it_can_create_a_database_provider(): void
     {
-        $provider = $this->factory->create(new Dsn('database://tailr_translations'));
+        $provider = $this->factory->create(new Dsn('database://default'));
+        $this->managerRegistry->getConnection('default')->shouldBeCalled();
         self::assertInstanceOf(ProviderInterface::class, $provider);
         self::assertInstanceOf(DatabaseProvider::class, $provider);
+        self::assertStringEndsWith('default', (string) $provider);
     }
 
     /** @test */
@@ -55,9 +61,11 @@ class DatabaseProviderFactoryTest extends TestCase
     }
 
     /** @test */
-    public function it_will_throw_an_exception_with_invalid_name_given(): void
+    public function it_will_throw_an_exception_with_invalid_connection_name_is_given(): void
     {
         self::expectException(LogicException::class);
+        $this->managerRegistry->getConnection('invalid-name')->willThrow(new \InvalidArgumentException('Invalid connection name'));
+
         $this->factory->create(new Dsn('database://invalid-name'));
     }
 }

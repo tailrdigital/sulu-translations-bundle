@@ -14,7 +14,7 @@ class ExportHandler
     public function __construct(
         private readonly Clock $clock,
         private readonly ExportAction $exportAction,
-        private readonly EventDispatcher $eventDispatcher
+        private readonly EventDispatcher $eventDispatcher,
     ) {
     }
 

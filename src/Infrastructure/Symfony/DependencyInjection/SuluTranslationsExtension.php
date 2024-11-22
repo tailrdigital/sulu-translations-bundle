@@ -17,24 +17,6 @@ class SuluTranslationsExtension extends Extension implements PrependExtensionInt
 {
     public function prepend(ContainerBuilder $container): void
     {
-        if ($container->hasExtension('doctrine')) {
-            $container->prependExtensionConfig(
-                'doctrine',
-                [
-                    'orm' => [
-                        'mappings' => [
-                            'SuluTranslationsBundle' => [
-                                'type' => 'attribute',
-                                'dir' => __DIR__.'/../../../Domain/Model',
-                                'prefix' => 'Tailr\SuluTranslationsBundle\Domain\Model',
-                                'alias' => 'SuluTranslationsBundle',
-                            ],
-                        ],
-                    ],
-                ]
-            );
-        }
-
         if ($container->hasExtension('sulu_admin')) {
             $container->prependExtensionConfig(
                 'sulu_admin',
@@ -72,6 +54,7 @@ class SuluTranslationsExtension extends Extension implements PrependExtensionInt
                     ],
                 ]
             );
+
         }
 
     }
@@ -81,7 +64,9 @@ class SuluTranslationsExtension extends Extension implements PrependExtensionInt
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../../../config/services'));
         $loader->load('actions.yaml');
         $loader->load('commands.yaml');
-        $loader->load('controllers.yaml');
+        $loader->load('commands.yaml');
+        $loader->load('console-commands.yaml');
+        $loader->load('doctrine.yaml');
         $loader->load('events.yaml');
         $loader->load('query.yaml');
         $loader->load('controllers.yaml');

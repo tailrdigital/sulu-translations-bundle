@@ -12,7 +12,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
-use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
+use Tailr\SuluTranslationsBundle\Presentation\Controller\Admin\ListController;
 
 class TranslationsAdmin extends Admin
 {
@@ -55,7 +55,7 @@ class TranslationsAdmin extends Admin
 
         // Configure List View
         $listView = $this->viewBuilderFactory->createListViewBuilder(self::LIST_VIEW, '/translations')
-            ->setResourceKey(Translation::RESOURCE_KEY)
+            ->setResourceKey(ListController::RESOURCE_KEY)
             ->setListKey(self::LIST_KEY)
             ->setTitle('Translations')
             ->addListAdapters(['table'])
@@ -69,7 +69,7 @@ class TranslationsAdmin extends Admin
             self::EDIT_FORM_VIEW,
             '/translations/:id'
         )
-            ->setResourceKey(Translation::RESOURCE_KEY)
+            ->setResourceKey(ListController::RESOURCE_KEY)
             ->setBackView(self::LIST_VIEW)
             ->setTitleProperty('title');
         $viewCollection->add($editFormView);
@@ -78,7 +78,7 @@ class TranslationsAdmin extends Admin
             self::EDIT_FORM_VIEW.'.details',
             '/details'
         )
-            ->setResourceKey(Translation::RESOURCE_KEY)
+            ->setResourceKey(ListController::RESOURCE_KEY)
             ->setFormKey(self::FORM_KEY)
             ->setTabTitle('sulu_admin.details')
             ->addToolbarActions($editFormToolbarActions)

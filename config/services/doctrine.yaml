@@ -1,0 +1,12 @@
+services:
+  Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Schema\SetupTranslationsTable:
+    arguments:
+      - '@Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\DatabaseConnectionManager'
+
+  Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Mapper\TranslationMapper: ~
+
+  Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\DatabaseConnectionManager:
+    arguments:
+      - '@translation.provider_collection'
+      - '@Doctrine\Persistence\ManagerRegistry'
+    lazy: true

@@ -7,6 +7,7 @@ namespace Tailr\SuluTranslationsBundle\Tests\Unit\Infrastructure\Translation\Pro
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Tailr\SuluTranslationsBundle\Domain\Model\TranslationCollection;
 use Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository;
 use Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider\Loader;
 use Tailr\SuluTranslationsBundle\Tests\Fixtures\Translations;
@@ -32,18 +33,18 @@ class LoaderTest extends TestCase
         $this->repository
             ->findAllByLocaleDomain($localeEn = 'en', $domain = 'messages')
             ->willReturn(
-                [
+                new TranslationCollection(
                     Translations::create('app.foo', $expectedValueEn1 = 'Foo'),
                     Translations::create('app.bar', $expectedValueEn2 = 'Bar'),
-                ]
+                )
             );
         $this->repository
             ->findAllByLocaleDomain($localeNl = 'nl', $domain)
             ->willReturn(
-                [
+                new TranslationCollection(
                     Translations::create('app.foo', $expectedValueNl1 = 'Foo NL'),
                     Translations::create('app.bar', $expectedValueNl2 = 'Bar NL'),
-                ]
+                )
             );
 
         $bag = $this->loader->execute([$domain], [$localeEn, $localeNl]);

@@ -1,5 +1,6 @@
 services:
   Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Repository\DoctrineTranslationRepository:
     arguments:
-      - '@doctrine.orm.entity_manager'
+      - '@Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\DatabaseConnectionManager'
+      - '@Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Mapper\TranslationMapper'
   Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository: '@Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Repository\DoctrineTranslationRepository'

@@ -4,48 +4,54 @@ declare(strict_types=1);
 
 namespace Tailr\SuluTranslationsBundle\Presentation\Controller\Admin;
 
-use FOS\RestBundle\View\View;
-use FOS\RestBundle\View\ViewHandlerInterface;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
-use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
+use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
-use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
-use Tailr\SuluTranslationsBundle\Infrastructure\Sulu\Admin\TranslationsAdmin;
+use Symfony\Component\Serializer\SerializerInterface;
+use Tailr\SuluTranslationsBundle\Domain\Query\FetchTranslations;
+use Tailr\SuluTranslationsBundle\Domain\Query\SearchCriteria;
+
+use function Psl\Type\int;
 
 #[Route(path: '/translations', name: 'tailr.translations_list', options: ['expose' => true], methods: ['GET'])]
 final class ListController extends AbstractSecuredTranslationsController implements SecuredControllerInterface
 {
+    public const RESOURCE_KEY = 'tailr_translations';
+
     public function __construct(
-        private readonly ViewHandlerInterface $viewHandler,
-        private readonly DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        private readonly FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        private readonly RestHelperInterface $restHelper,
+        private readonly SerializerInterface $serializer,
+        private readonly ListRestHelperInterface $listRestHelper,
+        private readonly FetchTranslations $fetchTranslations,
     ) {
     }
 
-    public function __invoke(Request $request): Response
+    public function __invoke(): JsonResponse
     {
-        $listBuilder = $this->listBuilderFactory->create(Translation::class);
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(TranslationsAdmin::LIST_KEY);
-        $this->restHelper->initializeListBuilder(
-            $listBuilder,
-            null !== $fieldDescriptors ? $fieldDescriptors : []
+        $limit = int()->coerce($this->listRestHelper->getLimit());
+
+        $translationsResult = ($this->fetchTranslations)(
+            new SearchCriteria(
+                (string) $this->listRestHelper->getSearchPattern(),
+                $this->listRestHelper->getSortColumn(),
+                $this->listRestHelper->getSortOrder(),
+                (int) $this->listRestHelper->getOffset(),
+                $limit
+            )
         );
 
-        /** @psalm-suppress RedundantCastGivenDocblockType */
         $listRepresentation = new PaginatedRepresentation(
-            $listBuilder->execute(),
-            Translation::RESOURCE_KEY,
-            (int) $listBuilder->getCurrentPage(),
-            (int) $listBuilder->getLimit(),
-            $listBuilder->count()
+            $translationsResult->translationCollection(),
+            self::RESOURCE_KEY,
+            (int) $this->listRestHelper->getPage(),
+            $limit,
+            $translationsResult->totalCount(),
         );
 
-        return $this->viewHandler->handle(View::create($listRepresentation)->setFormat('json'));
+        return new JsonResponse(
+            $this->serializer->serialize($listRepresentation->toArray(), 'json'),
+            json: true
+        );
     }
 }

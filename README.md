@@ -1,10 +1,12 @@
 # Sulu Translations Bundle
 
-This package provides a Sulu admin panel for managing your website translations.
+This package provides a Sulu admin panel for managing your website translations. 
+
+The package includes a custom [Symfony translation provider](https://symfony.com/doc/current/translation.html#translation-providers) which stores your translations in a database.
 
 ## Demo
 
-TODO add screenshot or gif
+https://github.com/user-attachments/assets/65278818-b376-4c6b-816d-9dceab905140
 
 ## Installation
 
@@ -58,7 +60,9 @@ npm install
 npm run watch
 ```
 
-#### Setting up the database provider
+## Configuration
+
+#### Configuring the provider
 
 You have to add the database provider to the Symfony translator configuration. This is an example configuration for the `config/packages/translation.yaml` file.
 
@@ -68,13 +72,18 @@ You have to add the database provider to the Symfony translator configuration. T
 framework:
     translator:
         providers:
-            database:
-                dsn: 'database://tailr_translations'
+            tailr_database:
+                dsn: 'database://default'
                 domains: [ 'messages' ]
-                locales: [ 'nl', 'en', 'fr' ]
+                locales: [ 'en', 'fr', 'nl' ]
 ```
 
-## Configuration
+#### Doctrine DBAL connection
+
+The hostname in the DSN is actually your Doctrine DBAL connection name: `database://<dbal_connection_name>`. 
+If you want to store your translations in a separate database, you could [configure a new DBAL connection](https://symfony.com/doc/current/doctrine/multiple_entity_managers.html) and use the connection name in the DSN of the database translation provider. 
+
+#### Export format
 
 If you want to export your translations via the administrator panel, you should define the format or extension which is used for your translation files. 
 
@@ -91,25 +100,39 @@ Make sure you've set the correct permissions in the Sulu admin for this package.
 
 ## Usage
 
+First make sure the database table `tailr_translations` is created by running the command below.
+
+```sh
+bin/console tailr:sulu-translations:setup
+```
+
 If you don't have local translations files (e.g. CSV) you can generate them by using the command below.
 
 ```sh
-bin/console translation:extract --force --domain=messages --format=csv
+bin/console translation:extract --force --domain=messages --format=csv <locale>
 ```
 
 Once you have local translation files, you can export them to the database by using command below.
 
 ```sh
-bin/console translation:push database 
+bin/console translation:push tailr_database 
 ```
 
 Next you can update the translations via the Sulu admin panel. 
 
-Once you are done, you can export the translations back to the files by using the command below or clicking the _Export translations_ button via the Sulu admin panel.
+Once you are done, you can export the translations back to the translations files by using the command below or clicking the _Export translations_ button via the Sulu admin panel.
 
 ```sh
-bin/console translation:pull database --force --format csv
+bin/console translation:pull tailr_database --force --format csv
 ```
+
+After pulling the translations, you may need to clear the cache(s).
+
+```sh
+bin/console cache:clear
+bin/websiteconsole cache:clear
+```
+
 
 ## Known limitations
 

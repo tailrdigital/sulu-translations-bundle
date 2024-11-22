@@ -21,7 +21,7 @@ class UpdateHandler
     public function __invoke(UpdateCommand $command): void
     {
         $translation = $this->repository->findById($command->id);
-        $this->repository->save(
+        $this->repository->update(
             $translation->patch(
                 $command->translationMessage,
                 $this->clock->now()

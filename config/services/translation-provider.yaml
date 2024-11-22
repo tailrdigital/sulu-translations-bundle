@@ -16,5 +16,6 @@ services:
       - '@Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider\Writer'
       - '@Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider\Loader'
       - '@Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider\Remover'
+      - '@Doctrine\Persistence\ManagerRegistry'
     tags:
       - { name: 'translation.provider_factory' }

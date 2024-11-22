@@ -8,6 +8,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Tailr\SuluTranslationsBundle\Domain\Action\ExportAction;
 use Tailr\SuluTranslationsBundle\Domain\Exception\ExportFailedException;
+use Tailr\SuluTranslationsBundle\Infrastructure\Symfony\Translation\Provider\DatabaseProviderFactory;
 
 class CliExportAction implements ExportAction
 {
@@ -24,21 +25,30 @@ class CliExportAction implements ExportAction
     public function __invoke(): string
     {
         try {
-
-            $process = new Process([
+            $pullTranslationsProcess = new Process([
                 'php',
                 'bin/console',
                 '--no-interaction',
                 'translation:pull',
-                'database',
+                DatabaseProviderFactory::PROVIDER_NAME,
                 '--format',
                 $this->exportFormat,
                 '--force',
             ], timeout: 180);
-            $process->setWorkingDirectory($this->projectDir);
-            $process->mustRun();
+            $pullTranslationsProcess->setWorkingDirectory($this->projectDir);
+            $pullTranslationsProcess->mustRun();
 
-            return $process->getOutput();
+            foreach (['adminconsole', 'websiteconsole'] as $console) {
+                $cacheCleanProcess = new Process([
+                    'php',
+                    'bin/'.$console,
+                    'cache:clear',
+                ], timeout: 180);
+                $cacheCleanProcess->setWorkingDirectory($this->projectDir);
+                $cacheCleanProcess->mustRun();
+            }
+
+            return $pullTranslationsProcess->getOutput();
         } catch (ProcessFailedException $exception) {
             throw ExportFailedException::create($exception);
         }

@@ -2,3 +2,6 @@ services:
   Tailr\SuluTranslationsBundle\Domain\Query\FetchTranslation:
     arguments:
       - '@Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository'
+  Tailr\SuluTranslationsBundle\Domain\Query\FetchTranslations:
+    arguments:
+      - '@Tailr\SuluTranslationsBundle\Domain\Repository\TranslationRepository'

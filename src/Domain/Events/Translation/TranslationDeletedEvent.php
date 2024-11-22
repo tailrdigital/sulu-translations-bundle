@@ -12,7 +12,7 @@ class TranslationDeletedEvent implements DomainEvent
         public string $translationKey,
         public string $locale,
         public string $domain,
-        public \DateTimeImmutable $removedAt
+        public \DateTimeImmutable $removedAt,
     ) {
     }
 }

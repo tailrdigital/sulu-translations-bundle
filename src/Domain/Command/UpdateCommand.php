@@ -8,7 +8,7 @@ class UpdateCommand
 {
     public function __construct(
         public int $id,
-        public string $translationMessage
+        public string $translationMessage,
     ) {
     }
 }

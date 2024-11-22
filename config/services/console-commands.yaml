@@ -1,0 +1,6 @@
+services:
+  Tailr\SuluTranslationsBundle\Presentation\Console\SetupTranslationsTableCommand:
+    arguments:
+      - '@Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Schema\SetupTranslationsTable'
+    tags:
+      - console.command
