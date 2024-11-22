@@ -6,11 +6,8 @@ namespace Tailr\SuluTranslationsBundle\Domain\Model;
 
 use function Psl\invariant;
 
-class Translation
+final class Translation
 {
-    public const RESOURCE_KEY = 'tailr_translations';
-    public const TABLE_NAME = 'tailr_translations';
-
     private function __construct(
         private ?int $id,
         private string $locale,

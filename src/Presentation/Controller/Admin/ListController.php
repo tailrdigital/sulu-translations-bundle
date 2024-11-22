@@ -10,7 +10,6 @@ use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
 use Tailr\SuluTranslationsBundle\Domain\Query\FetchTranslations;
 use Tailr\SuluTranslationsBundle\Domain\Query\SearchCriteria;
 
@@ -19,6 +18,8 @@ use function Psl\Type\int;
 #[Route(path: '/translations', name: 'tailr.translations_list', options: ['expose' => true], methods: ['GET'])]
 final class ListController extends AbstractSecuredTranslationsController implements SecuredControllerInterface
 {
+    public const RESOURCE_KEY = 'tailr_translations';
+
     public function __construct(
         private readonly SerializerInterface $serializer,
         private readonly ListRestHelperInterface $listRestHelper,
@@ -42,7 +43,7 @@ final class ListController extends AbstractSecuredTranslationsController impleme
 
         $listRepresentation = new PaginatedRepresentation(
             $translationsResult->translationCollection(),
-            Translation::RESOURCE_KEY,
+            self::RESOURCE_KEY,
             (int) $this->listRestHelper->getPage(),
             $limit,
             $translationsResult->totalCount(),

@@ -55,7 +55,7 @@ class TranslationTable
             ->setAutoincrement(true)
             ->setNotnull(true);
         $table->addColumn('locale', Types::STRING)
-            ->setLength(2)
+            ->setLength(4)
             ->setNotnull(true);
         $table->addColumn('domain', Types::STRING)
             ->setLength(255)

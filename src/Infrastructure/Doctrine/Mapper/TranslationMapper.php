@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Mapper;
 
+use Tailr\SuluTranslationsBundle\Domain\Model\DateTimeType;
 use Tailr\SuluTranslationsBundle\Domain\Model\Translation;
 
 use function Psl\Type\int;
@@ -36,8 +37,8 @@ class TranslationMapper
             'tailr_translations_domain' => string(),
             'tailr_translations_key' => string(),
             'tailr_translations_translation' => string(),
-            'tailr_translations_created_at' => string(),
-            'tailr_translations_updated_at' => nullable(string()),
+            'tailr_translations_created_at' => DateTimeType::type(),
+            'tailr_translations_updated_at' => nullable(DateTimeType::type()),
         ])->coerce($data);
 
         return Translation::load(
@@ -46,10 +47,8 @@ class TranslationMapper
             $parsedData['tailr_translations_domain'],
             $parsedData['tailr_translations_key'],
             $parsedData['tailr_translations_translation'],
-            DateTimeImmutableMapper::map($parsedData['tailr_translations_created_at']),
-            (null !== $parsedData['tailr_translations_updated_at'])
-                ? DateTimeImmutableMapper::map($parsedData['tailr_translations_updated_at'])
-                : null,
+            $parsedData['tailr_translations_created_at'],
+            $parsedData['tailr_translations_updated_at'],
         );
 
     }
