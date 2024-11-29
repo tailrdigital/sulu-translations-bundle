@@ -132,7 +132,7 @@ class DoctrineTranslationRepository implements TranslationRepository
         if ($search = $criteria->searchString()) {
             $qb->andWhere(
                 $qb->expr()->or(
-                    $qb->expr()->like('lower(key)', ':search'),
+                    $qb->expr()->like('lower(translation_key)', ':search'),
                     $qb->expr()->like('lower(translation)', ':search')
                 )
             )->setParameter('search', '%'.lowercase($search).'%');
@@ -148,10 +148,10 @@ class DoctrineTranslationRepository implements TranslationRepository
         $qb = $connection->createQueryBuilder();
         $qb->select(TranslationTable::selectColumns())
             ->from(TranslationTable::NAME)
-            ->where('key = :key')
+            ->where('translation_key = :translationKey')
             ->andWhere('domain = :domain')
             ->andWhere('locale = :locale')
-            ->setParameter('key', $key)
+            ->setParameter('translationKey', $key)
             ->setParameter('domain', $domain)
             ->setParameter('locale', $locale);
 
@@ -171,10 +171,10 @@ class DoctrineTranslationRepository implements TranslationRepository
         $connection->transactional(function () use ($connection, $key, $locale, $domain): void {
             $qb = $connection->createQueryBuilder()
                 ->delete(TranslationTable::NAME)
-                ->where('key = :key')
+                ->where('translation_key = :translationKey')
                 ->andWhere('domain = :domain')
                 ->andWhere('locale = :locale')
-                ->setParameter('key', $key)
+                ->setParameter('translationKey', $key)
                 ->setParameter('domain', $domain)
                 ->setParameter('locale', $locale);
 
