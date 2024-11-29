@@ -26,7 +26,7 @@ class TranslationMapperTest extends TestCase
 
         self::assertSame($locale, $mappedTranslation['locale']);
         self::assertSame($domain, $mappedTranslation['domain']);
-        self::assertSame($key, $mappedTranslation['key']);
+        self::assertSame($key, $mappedTranslation['translation_key']);
         self::assertSame($translationValue, $mappedTranslation['translation']);
         self::assertSame($createdAt, $mappedTranslation['created_at']);
         self::assertNull($mappedTranslation['updated_at']);
@@ -39,7 +39,7 @@ class TranslationMapperTest extends TestCase
             'tailr_translations_id' => $id = 1,
             'tailr_translations_locale' => $locale = 'en',
             'tailr_translations_domain' => $domain = 'messages',
-            'tailr_translations_key' => $key = 'app.foo.bar',
+            'tailr_translations_translation_key' => $key = 'app.foo.bar',
             'tailr_translations_translation' => $translationValue = 'Foo Bar Value',
             'tailr_translations_created_at' => $createdAt = '2021-01-01 00:00:00',
             'tailr_translations_updated_at' => $updatedAt = '2021-01-01 10:00:00',

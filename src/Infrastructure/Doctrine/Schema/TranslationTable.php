@@ -60,7 +60,7 @@ class TranslationTable
         $table->addColumn('domain', Types::STRING)
             ->setLength(255)
             ->setNotnull(true);
-        $table->addColumn('key', Types::TEXT)
+        $table->addColumn('translation_key', Types::TEXT)
             ->setNotnull(true);
         $table->addColumn('translation', Types::TEXT)
             ->setNotnull(true);
