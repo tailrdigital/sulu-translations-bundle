@@ -41,7 +41,7 @@ Register an additional module in your admin's node dependencies via `assets/admi
 ```json
 {
   "dependencies": {
-    "sulu-translations-bundle": "file:../../vendor/tailrdigital/sulu-translations-bundle/assets/admin
+    "sulu-translations-bundle": "file:../../vendor/tailrdigital/sulu-translations-bundle/assets/admin"
   }  
 }
 ```
