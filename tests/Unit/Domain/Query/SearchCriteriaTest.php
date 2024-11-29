@@ -15,6 +15,7 @@ class SearchCriteriaTest extends TestCase
     {
         $this->criteria = new SearchCriteria(
             'searchValue',
+            ['locale' => 'en'],
             'columnValue',
             'ASC',
             0,
@@ -26,6 +27,12 @@ class SearchCriteriaTest extends TestCase
     public function it_has_a_search_value(): void
     {
         self::assertSame('searchValue', $this->criteria->searchString());
+    }
+
+    /** @test */
+    public function it_has_filters(): void
+    {
+        self::assertSame(['locale' => 'en'], $this->criteria->filters());
     }
 
     /** @test */

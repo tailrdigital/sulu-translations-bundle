@@ -9,7 +9,7 @@
                 <title>General</title>
             </meta>
             <properties>
-                <property name="key" type="text_area" disabledCondition="id">
+                <property name="translationKey" type="text_area" disabledCondition="id">
                     <meta>
                         <title>Key</title>
                     </meta>

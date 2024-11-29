@@ -36,7 +36,7 @@ class Loader
     {
         $translations = [];
         foreach ($this->repository->findAllByLocaleDomain($locale, $domain) as $translation) {
-            $translations[$translation->getKey()] = $translation->getTranslation();
+            $translations[$translation->getTranslationKey()] = $translation->getTranslation();
         }
 
         return new MessageCatalogue($locale, [$domain => $translations]);

@@ -55,7 +55,7 @@ class WriteHandlerTest extends TestCase
             ->willReturn(null);
 
         $this->repository->create(Argument::that(fn (Translation $translation) => $translation->getTranslation() === $translationValue
-            && $translation->getKey() === $key
+            && $translation->getTranslationKey() === $key
             && $translation->getLocale() === $locale
             && $translation->getDomain() === $domain
             && $translation->getCreatedAt() === $now
@@ -63,7 +63,7 @@ class WriteHandlerTest extends TestCase
         ))->shouldBeCalled();
         $this->eventDispatcher
             ->dispatch(Argument::that(fn (TranslationCreatedEvent $event) => $event->translation->getTranslation() === $translationValue
-                && $event->translation->getKey() === $key
+                && $event->translation->getTranslationKey() === $key
                 && $event->translation->getLocale() === $locale
                 && $event->translation->getDomain() === $domain
                 && $event->translation->getCreatedAt() === $now

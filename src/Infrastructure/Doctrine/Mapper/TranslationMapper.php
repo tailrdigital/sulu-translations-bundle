@@ -22,7 +22,7 @@ class TranslationMapper
         return [
             'locale' => $translation->getLocale(),
             'domain' => $translation->getDomain(),
-            'translation_key' => $translation->getKey(),
+            'translation_key' => $translation->getTranslationKey(),
             'translation' => $translation->getTranslation(),
             'created_at' => $translation->getCreatedAt(),
             'updated_at' => $translation->getUpdatedAt(),

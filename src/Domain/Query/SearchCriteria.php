@@ -6,8 +6,17 @@ namespace Tailr\SuluTranslationsBundle\Domain\Query;
 
 final class SearchCriteria
 {
+    /**
+     * @param string $searchString
+     * @param array<string, mixed> $filters
+     * @param string|null $sortColumn
+     * @param string|null $sortDirection
+     * @param int $offset
+     * @param int $limit
+     */
     public function __construct(
         private readonly string $searchString,
+        private readonly array $filters,
         private readonly ?string $sortColumn,
         private readonly ?string $sortDirection,
         private readonly int $offset,
@@ -18,6 +27,14 @@ final class SearchCriteria
     public function searchString(): string
     {
         return $this->searchString;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function filters(): array
+    {
+        return $this->filters;
     }
 
     public function sortColumn(): ?string
