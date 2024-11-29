@@ -51,7 +51,7 @@ class TranslationMapperTest extends TestCase
         self::assertSame($id, $translation->getId());
         self::assertSame($locale, $translation->getLocale());
         self::assertSame($domain, $translation->getDomain());
-        self::assertSame($key, $translation->getKey());
+        self::assertSame($key, $translation->getTranslationKey());
         self::assertSame($translationValue, $translation->getTranslation());
         self::assertSame($createdAt, $translation->getCreatedAt()->format('Y-m-d H:i:s'));
         self::assertSame($updatedAt, $translation->getUpdatedAt()->format('Y-m-d H:i:s'));

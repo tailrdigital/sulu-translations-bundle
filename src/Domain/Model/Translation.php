@@ -12,7 +12,7 @@ final class Translation
         private ?int $id,
         private string $locale,
         private string $domain,
-        private string $key,
+        private string $translationKey,
         private string $translation,
         private \DateTimeImmutable $createdAt,
         private ?\DateTimeImmutable $updatedAt,
@@ -22,23 +22,23 @@ final class Translation
     public static function create(
         string $locale,
         string $domain,
-        string $key,
+        string $translationKey,
         string $translation,
         \DateTimeImmutable $createdAt,
     ): self {
-        return new self(null, $locale, $domain, $key, $translation, $createdAt, null);
+        return new self(null, $locale, $domain, $translationKey, $translation, $createdAt, null);
     }
 
     public static function load(
         int $id,
         string $locale,
         string $domain,
-        string $key,
+        string $translationKey,
         string $translation,
         \DateTimeImmutable $createdAt,
         ?\DateTimeImmutable $updatedAt,
     ): self {
-        return new self($id, $locale, $domain, $key, $translation, $createdAt, $updatedAt);
+        return new self($id, $locale, $domain, $translationKey, $translation, $createdAt, $updatedAt);
     }
 
     public function getId(): int
@@ -58,9 +58,9 @@ final class Translation
         return $this->domain;
     }
 
-    public function getKey(): string
+    public function getTranslationKey(): string
     {
-        return $this->key;
+        return $this->translationKey;
     }
 
     public function getTranslation(): string

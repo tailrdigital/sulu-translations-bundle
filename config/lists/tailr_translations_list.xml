@@ -3,9 +3,15 @@
     <key>tailr_translations_list</key>
     <properties>
         <property name="id" visibility="always" translation="sulu_admin.id"/>
-        <property name="locale" searchability="yes" visibility="always" translation="Locale"/>
-        <property name="domain" searchability="yes" visibility="no" translation="Domain"/>
-        <property name="key" searchability="yes" visibility="always" translation="Key"/>
+        <property name="locale" searchability="yes" visibility="always" translation="Locale">
+            <filter type="text" />
+        </property>
+        <property name="domain" searchability="yes" visibility="no" translation="Domain">
+            <filter type="text" />
+        </property>
+        <property name="translationKey" searchability="yes" visibility="always" translation="Key">
+            <filter type="text" />
+        </property>
         <property name="combinedIdAndTranslation" searchability="yes" visibility="always" translation="Key">
             <transformer type="tailr_translation.inline_edit"/>
         </property>

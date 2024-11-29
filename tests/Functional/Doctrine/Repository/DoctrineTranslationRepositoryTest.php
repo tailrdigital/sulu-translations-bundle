@@ -74,7 +74,7 @@ class DoctrineTranslationRepositoryTest extends TestCase
     /** @test  */
     public function it_can_find_translations_by_criteria(): void
     {
-        $criteria = new SearchCriteria('pp.tit', 'locale', 'ASC', 0, 10);
+        $criteria = new SearchCriteria('pp.tit', ['locale' => null, 'translationKey' => 'app.title'], 'locale', 'ASC', 0, 10);
         $collection = iterator_to_array($this->repository->findByCriteria($criteria));
         $count = $this->repository->countByCriteria($criteria);
         self::assertSame('App Title', $collection[0]->getTranslation());
@@ -82,20 +82,35 @@ class DoctrineTranslationRepositoryTest extends TestCase
         self::assertCount(2, $collection);
         self::assertSame(2, $count);
 
-        $criteria = new SearchCriteria('pp.tit', 'locale', 'DESC', 0, 10);
+        $criteria = new SearchCriteria('', ['locale' => 'en', 'domain' => 'messages'], 'locale', 'ASC', 0, 10);
+        $collection = iterator_to_array($this->repository->findByCriteria($criteria));
+        $count = $this->repository->countByCriteria($criteria);
+        self::assertSame('App Title', $collection[0]->getTranslation());
+        self::assertSame('App Description', $collection[1]->getTranslation());
+        self::assertCount(2, $collection);
+        self::assertSame(2, $count);
+
+        $criteria = new SearchCriteria('', ['locale' => 'en', 'domain' => 'messages', 'translationKey' => 'app.title'], 'locale', 'ASC', 0, 10);
+        $collection = iterator_to_array($this->repository->findByCriteria($criteria));
+        $count = $this->repository->countByCriteria($criteria);
+        self::assertSame('App Title', $collection[0]->getTranslation());
+        self::assertCount(1, $collection);
+        self::assertSame(1, $count);
+
+        $criteria = new SearchCriteria('pp.tit', [], 'locale', 'DESC', 0, 10);
         $collection = iterator_to_array($this->repository->findByCriteria($criteria));
         self::assertSame('App Titel', $collection[0]->getTranslation());
         self::assertSame('App Title', $collection[1]->getTranslation());
 
-        $criteria = new SearchCriteria('pp.tit', 'locale', 'ASC', 0, 1);
+        $criteria = new SearchCriteria('pp.tit', [], 'locale', 'ASC', 0, 1);
         $collection = iterator_to_array($this->repository->findByCriteria($criteria));
         self::assertSame('App Title', $collection[0]->getTranslation());
 
-        $criteria = new SearchCriteria('pp.tit', 'locale', 'ASC', 1, 1);
+        $criteria = new SearchCriteria('pp.tit', [], 'locale', 'ASC', 1, 1);
         $collection = iterator_to_array($this->repository->findByCriteria($criteria));
         self::assertSame('App Titel', $collection[0]->getTranslation());
 
-        $criteria = new SearchCriteria('app.key.not.exists', 'locale', 'ASC', 0, 10);
+        $criteria = new SearchCriteria('app.key.not.exists', [], 'locale', 'ASC', 0, 10);
         $collection = $this->repository->findByCriteria($criteria);
         $count = $this->repository->countByCriteria($criteria);
         self::assertCount(0, $collection);

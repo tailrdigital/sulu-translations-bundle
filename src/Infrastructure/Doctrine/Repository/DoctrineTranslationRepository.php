@@ -138,6 +138,20 @@ class DoctrineTranslationRepository implements TranslationRepository
             )->setParameter('search', '%'.lowercase($search).'%');
         }
 
+        /**
+         * @var string $column
+         * @var mixed $value
+         */
+        foreach ($criteria->filters() as $column => $value) {
+            if (null === $value) {
+                continue;
+            }
+
+            $qb->andWhere(
+                $qb->expr()->eq(u($column)->snake()->toString(), ':'.$column)
+            )->setParameter($column, $value);
+        }
+
         return $qb;
     }
 

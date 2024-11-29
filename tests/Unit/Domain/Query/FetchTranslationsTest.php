@@ -34,6 +34,7 @@ class FetchTranslationsTest extends TestCase
     {
         $this->repository->findByCriteria($criteria = new SearchCriteria(
             'searchValue',
+            ['locale' => 'en'],
             'columnValue',
             'ASC',
             0,

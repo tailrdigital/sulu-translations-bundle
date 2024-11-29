@@ -30,10 +30,16 @@ final class ListController extends AbstractSecuredTranslationsController impleme
     public function __invoke(): JsonResponse
     {
         $limit = int()->coerce($this->listRestHelper->getLimit());
+        $filter = $this->listRestHelper->getFilter();
 
         $translationsResult = ($this->fetchTranslations)(
             new SearchCriteria(
                 (string) $this->listRestHelper->getSearchPattern(),
+                [
+                    'locale' => $filter['locale']['eq'] ?? null,
+                    'domain' => $filter['domain']['eq'] ?? null,
+                    'translationKey' => $filter['translationKey']['eq'] ?? null,
+                ],
                 $this->listRestHelper->getSortColumn(),
                 $this->listRestHelper->getSortOrder(),
                 (int) $this->listRestHelper->getOffset(),

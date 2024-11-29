@@ -24,7 +24,7 @@ class TranslationCollectionTest extends TestCase
     public function it_is_iterable(): void
     {
         foreach ($this->collection as $translation) {
-            self::assertStringStartsWith('Foo', $translation->getKey());
+            self::assertStringStartsWith('Foo', $translation->getTranslationKey());
         }
     }
 

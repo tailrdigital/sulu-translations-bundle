@@ -55,12 +55,18 @@ class ListControllerTest extends TestCase
         $this->listRestHelper->getSortColumn()->willReturn(null);
         $this->listRestHelper->getSortOrder()->willReturn(null);
         $this->listRestHelper->getSearchPattern()->willReturn(null);
+        $this->listRestHelper->getFilter()->willReturn([]);
         $this->listRestHelper->getPage()->willReturn(1);
         $this->listRestHelper->getLimit()->willReturn($limit = 2);
         $this->listRestHelper->getOffset()->willReturn($offset = 0);
 
         $this->fetchTranslations->__invoke(new SearchCriteria(
             '',
+            [
+                'locale' => null,
+                'domain' => null,
+                'translationKey' => null,
+            ],
             null,
             null,
             $offset,
@@ -90,12 +96,22 @@ class ListControllerTest extends TestCase
         $this->listRestHelper->getSortColumn()->willReturn($sortColumn = 'id');
         $this->listRestHelper->getSortOrder()->willReturn($sortOrder = 'ASC');
         $this->listRestHelper->getSearchPattern()->willReturn($searchPattern = 'Foo');
+        $this->listRestHelper->getFilter()->willReturn([
+            'locale' => ['eq' => 'nl'],
+            'domain' => ['eq' => 'messages'],
+            'translationKey' => ['eq' => 'foo'],
+        ]);
         $this->listRestHelper->getPage()->willReturn(1);
         $this->listRestHelper->getLimit()->willReturn($limit = 2);
         $this->listRestHelper->getOffset()->willReturn($offset = 0);
 
         $this->fetchTranslations->__invoke(new SearchCriteria(
             $searchPattern,
+            [
+                'locale' => 'nl',
+                'domain' => 'messages',
+                'translationKey' => 'foo',
+            ],
             $sortColumn,
             $sortOrder,
             $offset,

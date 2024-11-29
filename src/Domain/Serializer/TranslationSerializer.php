@@ -12,7 +12,7 @@ class TranslationSerializer
     {
         return [
             'id' => $translation->getId(),
-            'key' => $translation->getKey(),
+            'translationKey' => $translation->getTranslationKey(),
             'translation' => $translation->getTranslation(),
             'domain' => $translation->getDomain(),
             'locale' => $translation->getLocale(),

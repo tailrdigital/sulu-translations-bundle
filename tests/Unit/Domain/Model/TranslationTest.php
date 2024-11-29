@@ -22,7 +22,7 @@ class TranslationTest extends TestCase
 
         self::assertSame($locale, $translation->getLocale());
         self::assertSame($domain, $translation->getDomain());
-        self::assertSame($key, $translation->getKey());
+        self::assertSame($key, $translation->getTranslationKey());
         self::assertSame($translationValue, $translation->getTranslation());
         self::assertSame($createdAt, $translation->getCreatedAt());
         self::assertNull($translation->getUpdatedAt());
@@ -44,7 +44,7 @@ class TranslationTest extends TestCase
         self::assertSame($id, $translation->getId());
         self::assertSame($locale, $translation->getLocale());
         self::assertSame($domain, $translation->getDomain());
-        self::assertSame($key, $translation->getKey());
+        self::assertSame($key, $translation->getTranslationKey());
         self::assertSame($translationValue, $translation->getTranslation());
         self::assertSame($id.';'.$translationValue, $translation->getCombinedIdAndTranslation());
         self::assertSame($createdAt, $translation->getCreatedAt());
@@ -66,7 +66,7 @@ class TranslationTest extends TestCase
 
         self::assertSame($locale, $translation->getLocale());
         self::assertSame($domain, $translation->getDomain());
-        self::assertSame($key, $translation->getKey());
+        self::assertSame($key, $translation->getTranslationKey());
         self::assertSame($updatedTranslationValue, $translation->getTranslation());
         self::assertSame($createdAt, $translation->getCreatedAt());
         self::assertSame($updatedAt, $translation->getUpdatedAt());
