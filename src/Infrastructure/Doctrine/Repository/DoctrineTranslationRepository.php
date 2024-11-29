@@ -16,8 +16,6 @@ use Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Mapper\TranslationMappe
 use Tailr\SuluTranslationsBundle\Infrastructure\Doctrine\Schema\TranslationTable;
 
 use function Psl\Str\lowercase;
-use function Psl\Type\nullable;
-use function Psl\Type\scalar;
 use function Psl\Vec\map;
 use function Symfony\Component\String\u;
 
