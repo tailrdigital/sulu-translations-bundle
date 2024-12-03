@@ -81,7 +81,16 @@ framework:
 #### Doctrine DBAL connection
 
 The hostname in the DSN is actually your Doctrine DBAL connection name: `database://<dbal_connection_name>`. 
-If you want to store your translations in a separate database, you could [configure a new DBAL connection](https://symfony.com/doc/current/doctrine/multiple_entity_managers.html) and use the connection name in the DSN of the database translation provider. 
+If you want to store your translations in a separate database (preferred), you could [configure a new DBAL connection](https://symfony.com/doc/current/doctrine/multiple_entity_managers.html) and use the connection name in the DSN of the database translation provider.
+
+If you are using your default DBAL connection you probably want to configure `doctrine.dbal.schema_filter` so your migrations doesn't try to drop the `tailr_translations` table.
+
+```yaml
+doctrine:
+    dbal:
+        url: '%env(DATABASE_URL)%'
+        schema_filter: '/^(?!(other_prefix_|tailr_translations))/'
+```
 
 #### Export format
 
