@@ -1,3 +1,9 @@
+> ## Repository abandoned 2025-11-19
+>
+> This repository has moved to [phpro/sulu-translations-bundle](https://github.com/phpro/sulu-translations-bundle/).
+> You can follow a [migration guide](https://github.com/phpro/sulu-translations-bundle/releases/tag/1.0.0) to upgrade your project.
+
+
 # Sulu Translations Bundle
 
 This package provides a Sulu admin panel for managing your website translations. 
